@@ -381,7 +381,7 @@ MIT License - Feel free to fork, modify, and use!
 
 ## 👨‍💻 Developer
 
-**Mostafa**  
+**TheIdioticDev**  
 *Crafted with Python, Tkinter, and Colorama*
 
 > *"Inspired by GNU/Linux and Unix"*
