@@ -184,37 +184,38 @@ PenguWarp Kernel v0.1.5_generic-x86_64 initializing...
 PenguWarp features a built-in package manager for extending functionality.
 
 ### **Commands:**
-
+```bash
 pkgmgr search           # Show all available packages
 pkgmgr list             # Show installed packages
 pkgmgr install <pkg>    # Install a package
 pkgmgr remove <pkg>     # Remove a package
-
+```
 
 ### **Pre-installed Packages:**
 | Package | Description |
 |---------|-------------|
-| `snake` | Classic snake game in terminal |
+| `snake` | Classic snake game (auto-play demo) |
 | `cowsay` | Make a cow say things |
 | `matrix` | Cool matrix falling text effect |
 | `todo` | Simple todo list manager |
 
 ### **Using Packages:**
-
+```bash
 # Install a package
 pkgmgr install snake
 
 # Run it (with tab completion!)
 snake
+```
 
 ---
 
 ## 🎨 PenguWin Desktop
 
 Launch the graphical desktop environment with:
-bash ,,,
+```bash
 startx
-,,,
+```
 
 ### **Application Suite:**
 
@@ -227,6 +228,7 @@ startx
 #### **🔢 WarpCalc** - Calculator
 - Basic arithmetic operations (+, -, *, /)
 - Clean, button-based interface
+- Security-hardened (regex-validated input)
 - Error handling
 
 #### **🎨 PenguPaint** - Drawing Tool
@@ -263,8 +265,9 @@ startx
 ## 📜 Scripting (.pwe)
 
 Automate tasks with PenguWarp Scripts (`.pwe` files).
-bash ,,,
+
 ### **Example Script:**
+```bash
 # setup.pwe
 echo "Setting up project environment..."
 mkdir projects
@@ -274,17 +277,16 @@ mkdir docs
 touch README.md
 echo "Environment ready!"
 pyufetch
-,,
+```
 
 ### **Running Scripts:**
+```bash
 # Create the script
-''' bash
 pwdit setup.pwe
-'''
+
 # Execute it
-''' bash
 run setup.pwe
-'''
+```
 
 ### **Features:**
 - Execute multiple commands sequentially
@@ -320,7 +322,7 @@ PenguWarp follows a **fruit-based codename scheme** for all releases.
 
 | Version | Codename | Release Date | Key Features |
 |---------|----------|--------------|--------------|
-| **v0.1.5** | 🥭 **Mango** | 2025-02 | Package Manager, Tab Completion |
+| **v0.1.5** | 🥭 **Mango** | 2025-02 | Package Manager, Tab Completion, Security Fixes |
 | **v0.1.4** | 🍎 **Apple** | 2025-01 | PenguWin Desktop Environment |
 | **v0.1.3** | 🍌 **Banana** | 2025-01 | Dynamic Storage, Colored Output |
 | **v0.1.2** | 🍊 **Orange** | 2025-01 | Script Support (.pwe files) |
