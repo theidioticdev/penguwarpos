@@ -212,9 +212,9 @@ snake
 ## 🎨 PenguWin Desktop
 
 Launch the graphical desktop environment with:
-
+bash ,,,
 startx
-
+,,,
 
 ### **Application Suite:**
 
@@ -263,7 +263,7 @@ startx
 ## 📜 Scripting (.pwe)
 
 Automate tasks with PenguWarp Scripts (`.pwe` files).
-
+bash ,,,
 ### **Example Script:**
 # setup.pwe
 echo "Setting up project environment..."
@@ -274,15 +274,17 @@ mkdir docs
 touch README.md
 echo "Environment ready!"
 pyufetch
-
+,,
 
 ### **Running Scripts:**
 # Create the script
+bash ,,,
 pwdit setup.pwe
-
+,,
 # Execute it
+bash ,,,
 run setup.pwe
-
+,,,
 
 ### **Features:**
 - Execute multiple commands sequentially
