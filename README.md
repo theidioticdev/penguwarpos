@@ -278,13 +278,13 @@ pyufetch
 
 ### **Running Scripts:**
 # Create the script
-bash ,,,
+''' bash
 pwdit setup.pwe
-,,
+'''
 # Execute it
-bash ,,,
+''' bash
 run setup.pwe
-,,,
+'''
 
 ### **Features:**
 - Execute multiple commands sequentially
