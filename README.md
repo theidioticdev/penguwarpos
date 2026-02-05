@@ -360,7 +360,7 @@ PenguWarp follows a **fruit-based codename scheme** for all releases.
 
 ## 📄 License
 
-MIT License - Feel free to fork, modify, and use!
+GPL-3.0
 
 ---
 
