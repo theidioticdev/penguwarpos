@@ -4,8 +4,7 @@
 ![Version](https://img.shields.io/badge/version-0.1.5%20%22Mango%22-orange?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Python-blue?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
-
-> **Developed by Mostafa**  
+ 
 > *Inspired by GNU/Linux and Unix*
 
 ---
@@ -62,20 +61,6 @@
 - Persistent package tracking
 - Pre-built packages included (snake, cowsay, matrix, todo)
 - Easy package creation via Python modules
-
----
-
-## 🖥️ System Specifications
-
-| Component | Specification |
-|-----------|---------------|
-| **CPU** | Horizon V @ 120 Hz |
-| **GPU** | ASG 256g |
-| **RAM** | 128 MB (dynamic usage tracking) |
-| **Storage** | Crudal HDD V2 (512 MiB max) |
-| **Kernel** | pengu-v0.1.5-generic_x86-64 |
-| **Shell** | PWShell v0.1.5 |
-| **Desktop** | PenguWin v0.1.5 |
 
 ---
 
