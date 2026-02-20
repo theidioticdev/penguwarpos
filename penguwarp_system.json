@@ -1,7 +1,7 @@
 {
   "system": {
-    "username": "big",
-    "hostname": "chungus",
+    "username": "mostafa",
+    "hostname": "home",
     "first_boot": false
   },
   "filesystem": {
@@ -13,8 +13,8 @@
         "Pictures",
         "Desktop",
         "welcome.txt",
-        "repo.pwe",
-        "testing.pwe"
+        "test.pwe",
+        "vim.txt"
       ]
     },
     "~/Documents": {
@@ -37,16 +37,21 @@
       "type": "file",
       "content": "Welcome to PenguWarp OS \"Peach\", chig!\n\nExplore around, and do not forget to run 'pkgmgr search' daily to find new packages!.\nType 'help' to begin.\n\nBuilt with Python & Tkinter."
     },
-    "~/repo.pwe": {
+    "~/test.pwe": {
       "type": "file",
-      "content": "echo I meant testing.pwe, but whatever\npyufetch"
+      "content": "pkgmgr search\npkgmgr install snake\npkgmgr install todo\npkgmgr install dungeon\npkgmgr install cowsay\npkgmgr install matrix\necho [+] Installing Packages Succeeded! enjoy your pkgs :3"
     },
-    "~/testing.pwe": {
+    "~/vim.txt": {
       "type": "file",
-      "content": "echo testing how run now handles errors after rewriting cmd_run\npyufetch\necho if this appears, it worked. If not, I need some coffee..."
+      "content": "this is a text to test the vim-like environment of TUI PenguWarp eDITor"
     }
   },
   "installed_packages": [
-    "tpwdit"
+    "tpwdit",
+    "snake",
+    "todo",
+    "dungeon",
+    "cowsay",
+    "matrix"
   ]
 }

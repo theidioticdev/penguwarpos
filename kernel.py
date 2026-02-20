@@ -1004,7 +1004,7 @@ def cmd_rmdir(args: list[str]) -> None:
         print(f"rmdir: {args[0]}: no such directory")
 
 def cmd_help(args: list[str]) -> None:
-    print(f'\n{Fore.YELLOW}PENGUWARP OS v0.1.7 "PEACH" COMMAND REFERENCE')
+    print(f'\n{Fore.YELLOW}PENGUWARP OS v0.1.7 "LEMON" COMMAND REFERENCE')
     print(f"{Fore.WHITE}" + "-" * 60)
     for c, d in COMMAND_DESC.items():
         print(f"{Fore.YELLOW}{c:<12}{Fore.WHITE} : {d}")
