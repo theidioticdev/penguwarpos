@@ -35,7 +35,7 @@ def boot_animation_splash() -> None:
             console.print(
                 Panel(
                     f"[yellow]{penguin}[/yellow]\n"
-                    f'[bold orange1]PenguWarp OS v0.1.6 "Peach"[/bold orange1]\n'
+                    f'[bold orange1]PenguWarp OS v0.1.7-dev Lemon"[/bold orange1]\n'
                     f"[dim]Initializing{'.' * (i + 1)}[/dim]",
                     border_style="yellow",
                     title="[bold]PENGUWARP[/bold]",
@@ -94,7 +94,9 @@ COMMAND_DESC = {
     "startx": "Launch the PenguWin GUI environment",
     "pkgmgr": "Manage packages (install/remove/list/search)",
     "poweroff": "Shutdown the system and save all changes",
-    "rmdir": "Remove an empty directory"
+    "rmdir": "Remove an empty directory",
+    "usercn": "Changes the username",
+    "hostcn": "Changes the hostname"
 }
 
 
@@ -167,7 +169,7 @@ def first_boot_setup() -> None:
 
 
 def boot_sequence() -> None:
-    print(f"{Fore.YELLOW}PenguWarp Kernel v0.1.6-peach_x86_64 initializing...")
+    print(f"{Fore.YELLOW}PenguWarp Kernel v0.1.7-lemon-dev_x86_64 initializing...")
     time.sleep(0.4)
     logs = [
         "Detecting hardware...",
@@ -179,7 +181,7 @@ def boot_sequence() -> None:
         print(f"  [{Fore.YELLOW}  OK  {Fore.WHITE}] {log}")
         time.sleep(0.2)
     print(
-        f'\n{Fore.YELLOW}   ___\n  <   o>  PenguWarp OS\n  ( | )   v0.1.6 "Peach"\n  /___\\ \n'
+        f'\n{Fore.YELLOW}   ___\n  <   o>  PenguWarp OS\n  ( | )   v0.1.7 "Lemon" Testing\n  /___\\ \n'
     )
 
 
@@ -245,8 +247,8 @@ def gui_sysinfo(parent: tk.Misc) -> None:
     ).pack(pady=10)
 
     info_text = (
-        f'OS: PenguWarp v0.1.6 "Peach"\n'
-        f"Kernel: pwos-peach-v0.1.6-x86_64\n"
+        f'OS: PenguWarp v0.1.7 "Lemon" Testing\n'
+        f"Kernel: v0.1.7-lemon-dev_x86_64\n"
         f"User: {user}\n"
         f"RAM: {get_dynamic_ram()}MB / 128MB"
     )
@@ -910,7 +912,7 @@ def start_gui() -> None:
 
     tk.Label(
         root,
-        text="v0.1.6",
+        text="v0.1.7",
         font=("Monospace", 12),
         fg=GRV_ORANGE,
         bg=GRV_BG,
@@ -1002,7 +1004,7 @@ def cmd_rmdir(args: list[str]) -> None:
         print(f"rmdir: {args[0]}: no such directory")
 
 def cmd_help(args: list[str]) -> None:
-    print(f'\n{Fore.YELLOW}PENGUWARP OS v0.1.6 "PEACH" COMMAND REFERENCE')
+    print(f'\n{Fore.YELLOW}PENGUWARP OS v0.1.7 "PEACH" COMMAND REFERENCE')
     print(f"{Fore.WHITE}" + "-" * 60)
     for c, d in COMMAND_DESC.items():
         print(f"{Fore.YELLOW}{c:<12}{Fore.WHITE} : {d}")
@@ -1091,7 +1093,7 @@ def cmd_whoami(args: list[str]) -> None:
 
 
 def cmd_uname(args: list[str]) -> None:
-    print("pengu-v0.1.6-peach_x86-64")
+    print("v0.1.7-lemon-dev_x86-64")
 
 
 def cmd_clear(args: list[str]) -> None:
@@ -1112,8 +1114,8 @@ def cmd_pyufetch(args: list[str]) -> None:
     info = [
         f"{Fore.YELLOW}{user}@{hostname}",
         f"{Fore.WHITE}------------------",
-        f'{Fore.YELLOW}OS: {Fore.WHITE}PenguWarp v0.1.6 "Peach"',
-        f"{Fore.YELLOW}Kernel: {Fore.WHITE}pengu-v0.1.6-peach_x86-64",
+        f'{Fore.YELLOW}OS: {Fore.WHITE}PenguWarp v0.1.7 "Lemon"',
+        f"{Fore.YELLOW}Kernel: {Fore.WHITE}v0.1.7-lemon-dev_x86-64",
         f"{Fore.YELLOW}Uptime: {Fore.WHITE}{uptime}s",
         f"{Fore.YELLOW}Shell: {Fore.WHITE}PWShell",
         f"{Fore.YELLOW}RAM: {Fore.WHITE}{used_ram}MB / 128.0MB",
@@ -1147,15 +1149,32 @@ def cmd_pwdit(args: list[str]) -> None:
 def cmd_run(args: list[str]) -> None:
     if not args:
         return
-    path = f"{current_dir}/{args[0]}" if current_dir != "~" else f"~/{args[0]}"
-    if path in filesystem and args[0].endswith(".pwe"):
-        print(f"{Fore.YELLOW}Executing {args[0]}...")
-        for script_line in filesystem[path]["content"].split("\n"):
-            if script_line.strip():
-                execute_command(script_line.strip())
-    else:
-        print(f"run: {args[0]} is not a valid script")
+    path = f"{current_dir}/{args[0]}"if current_dir != "~" else f"~/{args[0]}"
+    if path not in filesystem or not args[0].endswith(".pwe"):
+        print(f"run: {args[0]}: not a valid script")
+        return
 
+    lines = filesystem[path]["content"].split("\n")
+    print(f"{Fore.YELLOW}Executing {args[0]}...")
+    
+    errors = 0
+    for i, script_line in enumerate(lines, 1):
+        stripped = script_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        
+        cmd = stripped.split()[0]
+        if cmd not in commands and cmd not in installed_packages:
+            print(f"{Fore.RED}run: {args[0]}: line {i}: unknown command '{cmd}'{Fore.WHITE}")
+            errors += 1
+            continue
+        
+        execute_command(stripped)
+    
+    if errors:
+        print(f"{Fore.RED}run: {args[0]}: finished with {errors} error(s){Fore.WHITE}")
+    else:
+        print(f"{Fore.YELLOW}run: {args[0]}: done{Fore.WHITE}")
 
 def cmd_pkgmgr(args: list[str]) -> None:
     if repo is None:
@@ -1245,6 +1264,23 @@ def cmd_poweroff(args: list[str]) -> None:
     save_system()
     time.sleep(1)
     sys.exit(0)
+def cmd_usercn(args: list[str]) -> None:
+    global user
+    if not args:
+        print(f"{Fore.RED}error: provide a new username")
+        return
+    user = args[0]
+    save_system()
+    print(f"{Fore.YELLOW}usercn: changed user to: {user}")
+
+def cmd_hostcn(args: list[str]) -> None:
+    global hostname
+    if not args:
+        print(f"{Fore.RED}error: provide a new hostname")
+        return
+    hostname = args[0]
+    save_system()
+    print(f"{Fore.YELLOW}hostcn: changed host to: {hostname}")
 
 
 commands: dict[str, object] = {
@@ -1267,6 +1303,8 @@ commands: dict[str, object] = {
     "startx": cmd_startx,
     "poweroff": cmd_poweroff,
     "rmdir": cmd_rmdir,
+    "usercn": cmd_usercn,
+    "hostcn": cmd_hostcn,
 }
 
 
@@ -1330,6 +1368,7 @@ def execute_command(line: str) -> None:
                 print(f"{Fore.RED}Error: Package file not found: {pkg_file}{Fore.WHITE}")
             except Exception as e:
                 print(f"{Fore.RED}Error running package: {e}{Fore.WHITE}")
+            load_system()
     else:
         print(f"penguwarp: {cmd}: command not found")
 

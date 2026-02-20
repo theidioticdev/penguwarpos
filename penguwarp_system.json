@@ -1,0 +1,52 @@
+{
+  "system": {
+    "username": "big",
+    "hostname": "chungus",
+    "first_boot": false
+  },
+  "filesystem": {
+    "~": {
+      "type": "dir",
+      "contents": [
+        "Documents",
+        "Downloads",
+        "Pictures",
+        "Desktop",
+        "welcome.txt",
+        "repo.pwe",
+        "testing.pwe"
+      ]
+    },
+    "~/Documents": {
+      "type": "dir",
+      "contents": []
+    },
+    "~/Downloads": {
+      "type": "dir",
+      "contents": []
+    },
+    "~/Pictures": {
+      "type": "dir",
+      "contents": []
+    },
+    "~/Desktop": {
+      "type": "dir",
+      "contents": []
+    },
+    "~/welcome.txt": {
+      "type": "file",
+      "content": "Welcome to PenguWarp OS \"Peach\", chig!\n\nExplore around, and do not forget to run 'pkgmgr search' daily to find new packages!.\nType 'help' to begin.\n\nBuilt with Python & Tkinter."
+    },
+    "~/repo.pwe": {
+      "type": "file",
+      "content": "echo I meant testing.pwe, but whatever\npyufetch"
+    },
+    "~/testing.pwe": {
+      "type": "file",
+      "content": "echo testing how run now handles errors after rewriting cmd_run\npyufetch\necho if this appears, it worked. If not, I need some coffee..."
+    }
+  },
+  "installed_packages": [
+    "tpwdit"
+  ]
+}
