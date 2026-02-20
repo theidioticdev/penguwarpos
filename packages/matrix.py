@@ -1,65 +1,47 @@
+import sys
 import random
 import time
-from colorama import Fore
+import shutil
 
-def run():
-    """Cool matrix falling text effect"""
-    print(f"{Fore.GREEN}=== MATRIX RAIN ==={Fore.WHITE}")
-    print("Press Ctrl+C to stop\n")
-    time.sleep(1)
-    
+# Characters to use
+CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*"
+
+
+def matrix_rain():
+    cols, rows = shutil.get_terminal_size()
+
+    # Single array, reused every frame
+    drops = [0] * cols
+
+    # Hide cursor
+    sys.stdout.write("\033[?25l")
+    sys.stdout.flush()
+
     try:
-        import os
-        width = 60
-        height = 20
-        
-        # Initialize columns
-        columns = []
-        for _ in range(width):
-            columns.append({
-                'chars': [],
-                'y': random.randint(-height, 0),
-                'speed': random.choice([1, 2, 3])
-            })
-        
-        chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?"
-        
-        frame = 0
         while True:
-            # Clear screen
-            print("\033[H\033[J", end="")
-            
-            # Update and draw
-            grid = [[' ' for _ in range(width)] for _ in range(height)]
-            
-            for i, col in enumerate(columns):
-                col['y'] += col['speed']
-                
-                if col['y'] > height + 10:
-                    col['y'] = random.randint(-height, 0)
-                    col['speed'] = random.choice([1, 2, 3])
-                
-                # Draw trail
-                for offset in range(10):
-                    y = col['y'] - offset
-                    if 0 <= y < height:
-                        char = random.choice(chars)
-                        if offset == 0:
-                            grid[y][i] = f"{Fore.WHITE}{char}"
-                        elif offset < 3:
-                            grid[y][i] = f"{Fore.LIGHTGREEN_EX}{char}"
-                        else:
-                            grid[y][i] = f"{Fore.GREEN}{char}"
-            
-            # Print grid
-            for row in grid:
-                print(''.join(row))
-            
+            # Clear and reset - don't accumulate
+            sys.stdout.write("\033[2J\033[H")
+
+            # Update drops
+            for i in range(cols):
+                if drops[i] == 0:
+                    if random.random() > 0.975:
+                        drops[i] = 1
+                elif drops[i] > rows:
+                    drops[i] = 0
+                else:
+                    # Draw character
+                    char = random.choice(CHARS)
+                    sys.stdout.write(f"\033[{drops[i]};{i + 1}H\033[92m{char}")
+                    drops[i] += 1
+
+            sys.stdout.flush()
             time.sleep(0.05)
-            frame += 1
-            
+
     except KeyboardInterrupt:
-        print(f"\n{Fore.WHITE}Matrix stopped.")
+        sys.stdout.write("\033[?25h\033[2J\033[H")
+        sys.stdout.flush()
+
 
 if __name__ == "__main__":
-    run()
+    matrix_rain()
