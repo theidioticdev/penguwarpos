@@ -1,7 +1,7 @@
 # 🐧 PenguWarp OS
 ### *A Persistent Unix-Inspired Virtual Operating System*
 
-![Version](https://img.shields.io/badge/version-0.1.5%20%22Mango%22-orange?style=flat-square)
+![Version](https://img.shields.io/badge/version-0.1.6%20%22Peach%22-orange?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Python-blue?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
  
