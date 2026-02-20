@@ -80,7 +80,7 @@ cd PenguWarp/
 pip install colorama
 
 # Run the OS
-python kernel.py
+python3 kernel.py
 ```
 
 ### **File Structure:**
@@ -110,20 +110,6 @@ PenguWarp/
 - Your filesystem and installed packages persist automatically
 - No re-configuration needed
 
-**Boot Sequence:**
-```
-PenguWarp Kernel v0.1.5_generic-x86_64 initializing...
-  [  OK  ] Detecting Horizon V CPU...
-  [  OK  ] Mounting Crudal HDD V2...
-  [  OK  ] Initializing Memory Manager (128MB)...
-  [  OK  ] Loading PWShell...
-
-   ___
-  <   o>  PenguWarp OS
-  ( | )   v0.1.5
-  /___\ 
-```
-
 ---
 
 ## 💻 PWShell Commands
@@ -131,13 +117,13 @@ PenguWarp Kernel v0.1.5_generic-x86_64 initializing...
 ### **File Management**
 | Command | Description |
 |---------|-------------|
-| `ls` | List files and directories in current path |
+| `list` | List files and directories in current path |
 | `cd <dir>` | Navigate to directory |
-| `pwd` | Show current working directory |
+| `whereami` | Show current working directory |
 | `mkdir <name>` | Create a new directory |
-| `touch <file>` | Create a new empty file |
-| `rm <file>` | Remove a file |
-| `cat <file>` | Display file contents |
+| `mkfile <file>` | Create a new empty file |
+| `delete <file>` | Remove a file |
+| `read <file>` | Display file contents |
 
 ### **Text Editing**
 | Command | Description |
@@ -176,14 +162,6 @@ pkgmgr install <pkg>    # Install a package
 pkgmgr remove <pkg>     # Remove a package
 ```
 
-### **Pre-installed Packages:**
-| Package | Description |
-|---------|-------------|
-| `snake` | Classic snake game (auto-play demo) |
-| `cowsay` | Make a cow say things |
-| `matrix` | Cool matrix falling text effect |
-| `todo` | Simple todo list manager |
-
 ### **Using Packages:**
 ```bash
 # Install a package
@@ -221,7 +199,7 @@ startx
 - Clear canvas functionality
 - Simple and intuitive
 
-#### **📊 SysMonitor** - System Information
+#### **📊 Gardener** - System Information
 - Real-time RAM usage display
 - Disk space monitoring
 - System specifications
@@ -307,6 +285,7 @@ PenguWarp follows a **fruit-based codename scheme** for all releases.
 
 | Version | Codename | Release Date | Key Features |
 |---------|----------|--------------|--------------|
+| **v0.1.6** | 🍑 **Mango** | 2025-02 | Package Manager, Tweaks, new GUI design, improved security |
 | **v0.1.5** | 🥭 **Mango** | 2025-02 | Package Manager, Tab Completion, Security Fixes |
 | **v0.1.4** | 🍎 **Apple** | 2025-01 | PenguWin Desktop Environment |
 | **v0.1.3** | 🍌 **Banana** | 2025-01 | Dynamic Storage, Colored Output |
@@ -349,6 +328,7 @@ PenguWarp follows a **fruit-based codename scheme** for all releases.
 - **Colorama** - Terminal colors
 - **JSON** - Data persistence
 - **Readline** - Tab completion
+- **Rich** - Boot animation
 
 ### **Architecture:**
 - **Kernel**: Main OS loop and system management
@@ -377,8 +357,6 @@ GPL-3.0
 
 - GNU/Linux community for inspiration
 - Unix philosophy for design principles
-- NeXTSTEP/WindowMaker for GUI aesthetics
-- Catppuccin color scheme (Mocha variant)
 
 ---
 
