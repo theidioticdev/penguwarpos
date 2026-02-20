@@ -1,385 +1,123 @@
 # 🐧 PenguWarp OS
-### *A Persistent Unix-Inspired Virtual Operating System*
+*A persistent Unix-inspired virtual OS built in Python*
 
-![Version](https://img.shields.io/badge/version-0.1.5%20%22Mango%22-orange?style=flat-square)
+![Version](https://img.shields.io/badge/version-0.1.6%20%22Peach%22-orange?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Python-blue?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
- 
-> *Inspired by GNU/Linux and Unix*
+![License](https://img.shields.io/badge/license-GPL--3.0-green?style=flat-square)
+
+> Inspired by GNU/Linux and Unix philosophy
 
 ---
 
-## 📖 Table of Contents
-- [Introduction](#-introduction)
-- [Features](#-features)
-- [System Specifications](#-system-specifications)
-- [Installation](#-installation)
-- [Boot Process](#-boot-process)
-- [PWShell Commands](#-pwshell-commands)
-- [Package Management](#-package-management)
-- [PenguWin Desktop](#-penguwin-desktop)
-- [Scripting (.pwe)](#-scripting-pwe)
-- [Shortcuts & Tips](#-shortcuts--tips)
-- [Version History](#-version-history)
-- [Roadmap](#-roadmap)
+## Setup
 
----
+**Requirements:** Python 3.7+, `colorama`, `tkinter`, `rich`
 
-## 🌟 Introduction
-
-**PenguWarp** is a persistent, Unix-inspired operating system simulation built entirely in Python. It features a robust command-line interface (**PWShell**), a custom graphical desktop environment (**PenguWin**), and a package management system, all wrapped in a lightweight virtual filesystem.
-
-**Key Highlights:**
-- 🖥️ Full terminal emulation with tab completion
-- 🎨 Custom GUI desktop environment
-- 📦 Built-in package manager
-- 💾 Persistent JSON-based filesystem
-- 🐧 Unix-like command structure
-- 🎯 Scripting support via `.pwe` files
-
----
-
-## ✨ Features
-
-### **PWShell (Terminal)**
-- Tab auto-completion for commands, files, and packages
-- Unix-like filesystem navigation (`cd`, `ls`, `pwd`)
-- File operations (`touch`, `mkdir`, `rm`, `cat`)
-- Text editing with `pwdit`
-- Script execution with `.pwe` files
-- System information display (`pyufetch`, `uname`)
-
-### **PenguWin (Desktop Environment)**
-- Draggable windows with title bars
-- Full GUI application suite
-- NeXTSTEP/WindowMaker-inspired aesthetics
-- Dock-based application launcher
-- Desktop icons
-
-### **Package Management**
-- Install/remove packages dynamically
-- Persistent package tracking
-- Pre-built packages included (snake, cowsay, matrix, todo)
-- Easy package creation via Python modules
-
----
-
-## 📥 Installation
-
-### **Requirements:**
-- Python 3.7+
-- `colorama` library
-- `tkinter` (usually included with Python)
-
-### **Setup:**
 ```bash
-# Clone or download the project
-cd PenguWarp/
-
-# Install dependencies
-pip install colorama
-
-# Run the OS
-python kernel.py
+git clone https://github.com/TheIdioticDev/penguwarpos
+cd penguwarpos
+pip install colorama rich
+python3 kernel.py
 ```
 
-### **File Structure:**
+**File structure:**
 ```
 PenguWarp/
-├── kernel.py                  # Main OS kernel
-├── repo.py                    # Package repository
-├── packages/                  # Package directory
+├── kernel.py
+├── repo.py
+├── packages/
 │   ├── snake.py
 │   ├── cowsay.py
 │   ├── matrix.py
-│   └── todo.py
-└── penguwarp_system.json      # Persistent storage (auto-generated)
+│   ├── todo.py
+│   └── dungeon.py
+└── penguwarp_system.json
 ```
 
 ---
 
-## 🚀 Boot Process
+## PWShell Commands
 
-**First Boot:**
-1. Launch `kernel.py`
-2. Enter your desired **Username** and **Hostname**
-3. The system initializes the virtual filesystem
-4. All settings are saved to `penguwarp_system.json`
-
-**Subsequent Boots:**
-- Your filesystem and installed packages persist automatically
-- No re-configuration needed
-
-**Boot Sequence:**
-```
-PenguWarp Kernel v0.1.5_generic-x86_64 initializing...
-  [  OK  ] Detecting Horizon V CPU...
-  [  OK  ] Mounting Crudal HDD V2...
-  [  OK  ] Initializing Memory Manager (128MB)...
-  [  OK  ] Loading PWShell...
-
-   ___
-  <   o>  PenguWarp OS
-  ( | )   v0.1.5
-  /___\ 
-```
+| Command | Description |
+|---------|-------------|
+| `list` | List files in current directory |
+| `cd <dir>` | Change directory |
+| `whereami` | Print current path |
+| `mkdir <n>` | Create directory |
+| `mkfile <file>` | Create empty file |
+| `delete <file>` | Remove a file |
+| `rmdir <dir>` | Remove empty directory |
+| `read <file>` | Print file contents |
+| `echo <text>` | Print text |
+| `pwdit <file>` | Open line editor |
+| `run <script.pwe>` | Execute a .pwe script |
+| `pkgmgr <action>` | Package manager |
+| `startx` | Launch PenguWin desktop |
+| `pyufetch` | System info |
+| `uname` | Kernel version |
+| `whoami` | Current user |
+| `clear` | Clear screen |
+| `poweroff` | Shutdown and save |
 
 ---
 
-## 💻 PWShell Commands
+## Package Manager
 
-### **File Management**
-| Command | Description |
-|---------|-------------|
-| `ls` | List files and directories in current path |
-| `cd <dir>` | Navigate to directory |
-| `pwd` | Show current working directory |
-| `mkdir <name>` | Create a new directory |
-| `touch <file>` | Create a new empty file |
-| `rm <file>` | Remove a file |
-| `cat <file>` | Display file contents |
-
-### **Text Editing**
-| Command | Description |
-|---------|-------------|
-| `pwdit <file>` | Open PenguWarp line editor (double Enter to save) |
-| `echo <text>` | Display a line of text |
-
-### **System Commands**
-| Command | Description |
-|---------|-------------|
-| `help` | Display comprehensive command reference |
-| `uname` | Display kernel and system version |
-| `whoami` | Show current active user |
-| `pyufetch` | Show system hardware and OS branding |
-| `clear` | Clear the terminal screen |
-| `poweroff` | Shutdown and save all changes |
-
-### **Advanced Features**
-| Command | Description |
-|---------|-------------|
-| `run <script.pwe>` | Execute a .pwe script file |
-| `startx` | Launch the PenguWin GUI desktop |
-| `pkgmgr <action>` | Manage packages (see below) |
-
----
-
-## 📦 Package Management
-
-PenguWarp features a built-in package manager for extending functionality.
-
-### **Commands:**
 ```bash
-pkgmgr search           # Show all available packages
-pkgmgr list             # Show installed packages
-pkgmgr install <pkg>    # Install a package
-pkgmgr remove <pkg>     # Remove a package
+pkgmgr search           # browse available packages
+pkgmgr install <pkg>    # install a package
+pkgmgr remove <pkg>     # remove a package
+pkgmgr list             # show installed packages
 ```
 
-### **Pre-installed Packages:**
-| Package | Description |
-|---------|-------------|
-| `snake` | Classic snake game (auto-play demo) |
-| `cowsay` | Make a cow say things |
-| `matrix` | Cool matrix falling text effect |
-| `todo` | Simple todo list manager |
-
-### **Using Packages:**
-```bash
-# Install a package
-pkgmgr install snake
-
-# Run it (with tab completion!)
-snake
-```
+**Available packages:** `snake` `cowsay` `matrix` `todo` `dungeon`
 
 ---
 
-## 🎨 PenguWin Desktop
+## PenguWin Desktop
 
-Launch the graphical desktop environment with:
 ```bash
 startx
 ```
 
-### **Application Suite:**
-
-#### **🌳 Tree** - File Manager
-- Browse your virtual filesystem graphically
-- Navigate folders with double-click
-- View text files
-- Go up directories with ".." option
-
-#### **🔢 WarpCalc** - Calculator
-- Basic arithmetic operations (+, -, *, /)
-- Clean, button-based interface
-- Security-hardened (regex-validated input)
-- Error handling
-
-#### **🎨 PenguPaint** - Drawing Tool
-- Freehand drawing on canvas
-- Clear canvas functionality
-- Simple and intuitive
-
-#### **📊 SysMonitor** - System Information
-- Real-time RAM usage display
-- Disk space monitoring
-- System specifications
-- Health bars and visual feedback
-
-#### **⏰ WarpClock** - System Clock
-- Real-time clock display
-- Large, readable format
-- Updates every second
-
-#### **📝 GPWDIT** - Graphical Text Editor
-- File open/save/save-as dialogs
-- Line numbers
-- Syntax highlighting for `.pwe` files
-- Keyboard shortcuts (Ctrl+S, Ctrl+O, Ctrl+N)
-- Status bar with line/column tracking
-
-### **Desktop Features:**
-- **Dock**: Quick access to all applications
-- **Desktop Icons**: Launch apps from the desktop
-- **Window Management**: Drag windows by title bar
-- **Multi-Window**: Open multiple apps simultaneously
+Launches a Tkinter-based desktop with draggable windows, a dock, and the following apps: file browser, text editor (GPWDIT), calculator, paint, system info, and clock.
 
 ---
 
-## 📜 Scripting (.pwe)
+## Scripting (.pwe)
 
-Automate tasks with PenguWarp Scripts (`.pwe` files).
-
-### **Example Script:**
 ```bash
-# setup.pwe
-echo "Setting up project environment..."
+# example.pwe
+echo "Hello from PenguWarp!"
 mkdir projects
 cd projects
-mkdir src
-mkdir docs
-touch README.md
-echo "Environment ready!"
-pyufetch
+mkfile README.md
 ```
 
-### **Running Scripts:**
-```bash
-# Create the script
-pwdit setup.pwe
-
-# Execute it
-run setup.pwe
-```
-
-### **Features:**
-- Execute multiple commands sequentially
-- Automate filesystem operations
-- Chain system commands
-- Syntax highlighting in GPWDIT
+Run with `run example.pwe`. Supports syntax highlighting in GPWDIT.
 
 ---
 
-## ⚡ Shortcuts & Tips
+## Version History
 
-### **Terminal Shortcuts:**
-- **Tab**: Auto-complete commands, files, and packages
-- **Ctrl+C**: Cancel current operation
-- **Up/Down Arrows**: Command history (via readline)
-
-### **GPWDIT Shortcuts:**
-- **Ctrl+S**: Save file
-- **Ctrl+O**: Open file dialog
-- **Ctrl+N**: New file
-
-### **Tips:**
-- Use `pyufetch` to check system resources
-- Tab completion works on installed packages too!
-- Scripts can call other scripts with `run`
-- All GUI windows are draggable by the title bar
+| Version | Codename | Highlights |
+|---------|----------|------------|
+| **v0.1.6** | 🍑 Peach | Dungeon Crawler, GRV theme cleanup, bug fixes |
+| **v0.1.5** | 🥭 Mango | Package manager, tab completion, security fixes |
+| **v0.1.4** | 🍎 Apple | PenguWin desktop environment |
+| **v0.1.3** | 🍌 Banana | Dynamic storage, colored output |
+| **v0.1.2** | 🍊 Orange | Script support (.pwe files) |
+| **v0.1.1** | 🍓 Strawberry | Persistent filesystem |
+| **v0.1.0** | 🍇 Grape | Initial release |
 
 ---
 
-## 🥭 Version History
+## Roadmap
 
-PenguWarp follows a **fruit-based codename scheme** for all releases.
-
-| Version | Codename | Release Date | Key Features |
-|---------|----------|--------------|--------------|
-| **v0.1.5** | 🥭 **Mango** | 2025-02 | Package Manager, Tab Completion, Security Fixes |
-| **v0.1.4** | 🍎 **Apple** | 2025-01 | PenguWin Desktop Environment |
-| **v0.1.3** | 🍌 **Banana** | 2025-01 | Dynamic Storage, Colored Output |
-| **v0.1.2** | 🍊 **Orange** | 2025-01 | Script Support (.pwe files) |
-| **v0.1.1** | 🍓 **Strawberry** | 2025-01 | Persistent Filesystem |
-| **v0.1.0** | 🍇 **Grape** | 2025-01 | Initial Release |
+- **v0.2.0 "Dragon Fruit"** — multi-user support, permissions, GUI themes
+- **v0.3.0 "Kiwi"** — simulated networking, expanded package repo
+- **v1.0.0 "Watermelon"** — stable release, plugin system, advanced scripting
 
 ---
 
-## 🗺️ Roadmap
-
-### **v0.1.6 "Peach"** 🍑 (Planned)
-- Bug fixes and performance improvements
-- More default packages
-- Improved error handling
-
-### **v0.2.0 "Dragon Fruit"** 🐉 (Future)
-- Multi-user support
-- User permissions system
-- Enhanced GUI themes
-
-### **v0.3.0 "Kiwi"** 🥝 (Future)
-- Simulated networking features
-- Package repository system
-- Cloud sync simulation
-
-### **v1.0.0 "Watermelon"** 🍉 (Long-term)
-- Stable release
-- Complete documentation
-- Plugin system
-- Advanced scripting engine
-
----
-
-## 🛠️ Technical Details
-
-### **Built With:**
-- **Python 3** - Core language
-- **Tkinter** - GUI framework
-- **Colorama** - Terminal colors
-- **JSON** - Data persistence
-- **Readline** - Tab completion
-
-### **Architecture:**
-- **Kernel**: Main OS loop and system management
-- **Filesystem**: JSON-based virtual filesystem
-- **Package System**: Modular Python-based packages
-- **GUI**: Tkinter-based window manager
-
----
-
-## 📄 License
-
-GPL-3.0
-
----
-
-## 👨‍💻 Developer
-
-**TheIdioticDev**  
-*Crafted with Python, Tkinter, and Colorama*
-
-> *"Inspired by GNU/Linux and Unix"*
-
----
-
-## 🙏 Acknowledgments
-
-- GNU/Linux community for inspiration
-- Unix philosophy for design principles
-- NeXTSTEP/WindowMaker for GUI aesthetics
-- Catppuccin color scheme (Mocha variant)
-
----
-
-**🐧Enjoy!**
+*Built by **TheIdioticDev** with Python, Tkinter, Colorama, and Rich*
