@@ -1147,15 +1147,32 @@ def cmd_pwdit(args: list[str]) -> None:
 def cmd_run(args: list[str]) -> None:
     if not args:
         return
-    path = f"{current_dir}/{args[0]}" if current_dir != "~" else f"~/{args[0]}"
-    if path in filesystem and args[0].endswith(".pwe"):
-        print(f"{Fore.YELLOW}Executing {args[0]}...")
-        for script_line in filesystem[path]["content"].split("\n"):
-            if script_line.strip():
-                execute_command(script_line.strip())
-    else:
-        print(f"run: {args[0]} is not a valid script")
+    path = f"{current_dir}/{args[0]}"if current_dir != "~" else f"~/{args[0]}"
+    if path not in filesystem or not args[0].endswith(".pwe"):
+        print(f"run: {args[0]}: not a valid script")
+        return
 
+    lines = filesystem[path]["content"].split("\n")
+    print(f"{Fore.YELLOW}Executing {args[0]}...")
+    
+    errors = 0
+    for i, script_line in enumerate(lines, 1):
+        stripped = script_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        
+        cmd = stripped.split()[0]
+        if cmd not in commands and cmd not in installed_packages:
+            print(f"{Fore.RED}run: {args[0]}: line {i}: unknown command '{cmd}'{Fore.WHITE}")
+            errors += 1
+            continue
+        
+        execute_command(stripped)
+    
+    if errors:
+        print(f"{Fore.RED}run: {args[0]}: finished with {errors} error(s){Fore.WHITE}")
+    else:
+        print(f"{Fore.YELLOW}run: {args[0]}: done{Fore.WHITE}")
 
 def cmd_pkgmgr(args: list[str]) -> None:
     if repo is None:
@@ -1330,6 +1347,7 @@ def execute_command(line: str) -> None:
                 print(f"{Fore.RED}Error: Package file not found: {pkg_file}{Fore.WHITE}")
             except Exception as e:
                 print(f"{Fore.RED}Error running package: {e}{Fore.WHITE}")
+            load_system()
     else:
         print(f"penguwarp: {cmd}: command not found")
 

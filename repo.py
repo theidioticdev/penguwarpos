@@ -32,4 +32,10 @@ AVAILABLE_PACKAGES = {
         "description": "TUI Dungeon Crawler game",
         "version": "1.0",
     },
+    "tpwdit": {
+        "name": "TUI PWDIT",
+        "file": "tpwdit.py",
+        "description": "TUI PenguWarp eDITor",
+        "version": "1.0",
+    },
 }
