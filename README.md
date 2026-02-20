@@ -27,7 +27,7 @@
 
 ## 🌟 Introduction
 
-**PenguWarp** is a persistent, Unix-inspired operating system simulation built entirely in Python. It features a robust command-line interface (**PWShell**), a custom graphical desktop environment (**PenguWin**), and a package management system — all wrapped in a lightweight virtual filesystem.
+**PenguWarp** is a persistent, Unix-inspired operating system simulation built entirely in Python. It features a robust command-line interface (**PWShell**), a custom graphical desktop environment (**PenguWin**), and a package management system, all wrapped in a lightweight virtual filesystem.
 
 **Key Highlights:**
 - 🖥️ Full terminal emulation with tab completion
