@@ -1,7 +1,11 @@
 # 🐧 PenguWarp OS
 *A persistent Unix-inspired virtual OS built in Python*
 
+<<<<<<< HEAD
 ![Version](https://img.shields.io/badge/version-0.1.7%20%22Lemon%22-yellow?style=flat-square)
+=======
+![Version](https://img.shields.io/badge/version-0.1.6%20%22Peach%22-orange?style=flat-square)
+>>>>>>> ca429cad8914c1bbc935d22662977aecf02406f0
 ![Platform](https://img.shields.io/badge/platform-Python-blue?style=flat-square)
 ![License](https://img.shields.io/badge/license-GPL--3.0-green?style=flat-square)
 
