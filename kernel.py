@@ -118,6 +118,9 @@ def load_system() -> bool:
 
 def save_system() -> None:
     data = {
+        "users": [
+            {"username": user, "is_admin": True}
+        ],
         "system": {"username": user, "hostname": hostname, "first_boot": False},
         "filesystem": filesystem,
         "installed_packages": installed_packages,
@@ -129,9 +132,9 @@ def save_system() -> None:
 def first_boot_setup() -> None:
     global user, hostname, filesystem
     os.system("cls" if os.name == "nt" else "clear")
-    print(f"{Fore.YELLOW}╔════════════════════════════════════════╗")
-    print(f'{Fore.YELLOW}║  ~ Welcome to PenguWarp OS "Peach"!  ~ ║')
-    print(f"{Fore.YELLOW}╚════════════════════════════════════════╝\n")
+    print(f"{Fore.YELLOW}╔══════════════════════════════════════════════════╗")
+    print(f'{Fore.YELLOW}║  ~ Welcome to PenguWarp OS "Lemon (Testing)"!  ~ ║')
+    print(f"{Fore.YELLOW}╚══════════════════════════════════════════════════╝\n")
     u_in = input(f"{Fore.YELLOW}Choose Username: {Fore.WHITE}").strip()
     h_in = input(f"{Fore.YELLOW}Choose Hostname: {Fore.WHITE}").strip()
     user = u_in if u_in else "user"
@@ -1118,7 +1121,7 @@ def cmd_pyufetch(args: list[str]) -> None:
         f"{Fore.YELLOW}Kernel: {Fore.WHITE}v0.1.7-lemon-dev_x86-64",
         f"{Fore.YELLOW}Uptime: {Fore.WHITE}{uptime}s",
         f"{Fore.YELLOW}Shell: {Fore.WHITE}PWShell",
-        f"{Fore.YELLOW}RAM: {Fore.WHITE}{used_ram}MB / 128.0MB",
+        f"{Fore.YELLOW}Packages: {Fore.WHITE}{3 + len(installed_packages)} "
     ]
     for i in range(max(len(ascii_art), len(info))):
         left = ascii_art[i] if i < len(ascii_art) else " " * 22
@@ -1227,10 +1230,17 @@ def cmd_pkgmgr(args: list[str]) -> None:
         if pkg_name in installed_packages:
             print(f"{Fore.YELLOW}Package '{pkg_name}' is already installed{Fore.WHITE}")
             return
+
+        print(f"Downloading {pkg_name}...", end="", flush=True)
+        for _ in range(10):
+            time.sleep(0.1)
+            print("█", end="", flush=True)
+
+
         installed_packages.append(pkg_name)
         save_system()
         pkg_info = repo.AVAILABLE_PACKAGES[pkg_name]
-        print(f"{Fore.GREEN}✓{Fore.WHITE} Successfully installed {Fore.YELLOW}{pkg_info['name']}{Fore.WHITE}")
+        print(f"\n{Fore.GREEN}✓{Fore.WHITE} Successfully installed {Fore.YELLOW}{pkg_info['name']}{Fore.WHITE}")
         print(f"  You can now run it by typing: {Fore.YELLOW}{pkg_name}{Fore.WHITE}")
 
     elif action == "remove":
@@ -1282,6 +1292,27 @@ def cmd_hostcn(args: list[str]) -> None:
     save_system()
     print(f"{Fore.YELLOW}hostcn: changed host to: {hostname}")
 
+def cmd_userlist(args: list[str]) -> None:
+    if os.path.exists(SYSTEM_FILE):
+        with open(SYSTEM_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        data = {}
+    users = data.get("users", [{"username": user, "is_admin": True}])
+    print(f"{Fore.YELLOW}=== USERS ==={Fore.WHITE}")
+    for u in users:
+        tag = f" {Fore.CYAN}[admin]{Fore.WHITE}" if u.get("is_admin") else ""
+        print(f"  {Fore.YELLOW}{u['username']}{Fore.WHITE}{tag}")
+
+def cmd_useradd(args: list[str]) -> None:
+    if not args:
+        print(f"{Fore.RED}error: provide a username{Fore.WHITE}")
+        return
+    print(f"{Fore.YELLOW}useradd: multi-user support coming in a future release{Fore.WHITE}")
+
+def cmd_passwd(args: list[str]) -> None:
+    print(f"{Fore.YELLOW}passwd: authentication not yet implemented{Fore.WHITE}")
+
 
 commands: dict[str, object] = {
     "help": cmd_help,
@@ -1305,6 +1336,9 @@ commands: dict[str, object] = {
     "rmdir": cmd_rmdir,
     "usercn": cmd_usercn,
     "hostcn": cmd_hostcn,
+    "userlist": cmd_userlist,
+    "useradd":  cmd_useradd,
+    "passwd":   cmd_passwd,
 }
 
 
