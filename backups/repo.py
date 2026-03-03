@@ -6,7 +6,7 @@ AVAILABLE_PACKAGES = {
         "name": "Snake Game",
         "file": "snake.py",
         "description": "Classic snake game in terminal",
-        "version": "1.5",
+        "version": "1.0",
     },
     "cowsay": {
         "name": "Cowsay",
@@ -18,13 +18,13 @@ AVAILABLE_PACKAGES = {
         "name": "Matrix Rain",
         "file": "matrix.py",
         "description": "Cool matrix falling text effect",
-        "version": "2.0",
+        "version": "1.0",
     },
     "todo": {
         "name": "Todo List",
         "file": "todo.py",
         "description": "Simple todo list manager",
-        "version": "1.5",
+        "version": "1.0",
     },
     "dungeon": {
         "name": "Dungeon Crawler",
@@ -38,10 +38,4 @@ AVAILABLE_PACKAGES = {
         "description": "TUI PenguWarp eDITor",
         "version": "1.0",
     },
-    "dashwarp": {
-        "name": "DashWarp",
-        "file": "dashwarp.py",
-        "description": "TUI Dashboard app",
-        "version": "1.0",
-    }
 }

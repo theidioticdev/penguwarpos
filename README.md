@@ -23,14 +23,16 @@ python3 kernel.py
 **File structure:**
 ```
 PenguWarp/
-├── kernel.py
+├── kernel.py  
 ├── repo.py
 ├── packages/
 │   ├── snake.py
 │   ├── cowsay.py
 │   ├── matrix.py
 │   ├── todo.py
+│   ├── tpwdit.py
 │   └── dungeon.py
+
 └── penguwarp_system.json
 ```
 
@@ -102,7 +104,7 @@ Run with `run example.pwe`. Supports syntax highlighting in GPWDIT.
 
 | Version | Codename | Highlights |
 |---------|----------|------------|
-| **v0.1.6** | 🍑 Peach | Dungeon Crawler, GRV theme cleanup, bug fixes |
+| **v0.1.6** | 🍑 Peach | Dungeon Crawler, GRV theme cleanup, bug fixes (current stable release) |
 | **v0.1.5** | 🥭 Mango | Package manager, tab completion, security fixes |
 | **v0.1.4** | 🍎 Apple | PenguWin desktop environment |
 | **v0.1.3** | 🍌 Banana | Dynamic storage, colored output |

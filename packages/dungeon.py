@@ -1,9 +1,3 @@
-"""
-dungeon.py - PenguWarp Repository Package
-A roguelike dungeon crawler for PenguWarp OS
-Install: pkgmgr install dungeon
-"""
-
 import curses
 import random
 import sys

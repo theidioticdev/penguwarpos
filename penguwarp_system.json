@@ -1,0 +1,67 @@
+{
+  "users": [
+    {
+      "username": "root",
+      "password": "fcadb961c7b41a78b44d4f853724f8a20334cf5bfdcf735b2f15555b834d86fc",
+      "is_admin": true,
+      "home": "~"
+    },
+    {
+      "username": "mostafa",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "is_admin": true,
+      "home": "~/usr/mostafa"
+    }
+  ],
+  "system": {
+    "username": "mostafa",
+    "hostname": "home",
+    "first_boot": false
+  },
+  "filesystem": {
+    "~": {
+      "type": "dir",
+      "contents": [
+        "sys",
+        "usr",
+        "pkgs",
+        "tmp"
+      ]
+    },
+    "~/sys": {
+      "type": "dir",
+      "contents": [
+        "version"
+      ]
+    },
+    "~/usr": {
+      "type": "dir",
+      "contents": [
+        "mostafa"
+      ]
+    },
+    "~/pkgs": {
+      "type": "dir",
+      "contents": []
+    },
+    "~/tmp": {
+      "type": "dir",
+      "contents": []
+    },
+    "~/sys/version": {
+      "type": "file",
+      "content": "PenguWarp OS v0.1.8 \"Lemon\" Testing\nKernel: v0.1.8-lemon-dev_x86_64"
+    },
+    "~/usr/mostafa": {
+      "type": "dir",
+      "contents": [
+        "welcome.txt"
+      ]
+    },
+    "~/usr/mostafa/welcome.txt": {
+      "type": "file",
+      "content": "Welcome to PenguWarp OS \"Lemon\", mostafa!\n\nYour home directory is ~/usr/mostafa.\nType 'help' to see available commands.\nUse 'pwpm search' to browse installable packages.\n\nBuilt with Python & Dear PyGui."
+    }
+  },
+  "installed_packages": []
+}

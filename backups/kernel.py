@@ -1,3 +1,8 @@
+"""
+kernel.py — PenguWarp OS  v0.1.7 "Lemon" (Testing)
+Entry point: boot sequence, shell loop, tab completion.
+"""
+
 import os
 import sys
 import time
@@ -22,7 +27,7 @@ def _boot_splash() -> None:
             console.clear()
             console.print(Panel(
                 f"[yellow]{penguin}[/yellow]\n"
-                f'[bold orange1]PenguWarp OS v0.1.8 "Lemon" (Testing)[/bold orange1]\n'
+                f'[bold orange1]PenguWarp OS v0.1.7 "Lemon" (Testing)[/bold orange1]\n'
                 f"[dim]Initializing{'.' * (i + 1)}[/dim]",
                 border_style="yellow",
                 title="[bold]PENGUWARP[/bold]",
@@ -34,7 +39,7 @@ def _boot_splash() -> None:
 
 
 def _boot_sequence() -> None:
-    print(f"{Fore.YELLOW}PenguWarp Kernel v0.1.8-lemon-dev_x86_64 initializing...")
+    print(f"{Fore.YELLOW}PenguWarp Kernel v0.1.7-lemon-dev_x86_64 initializing...")
     time.sleep(0.4)
     for msg in [
         "Detecting hardware...",
@@ -44,66 +49,37 @@ def _boot_sequence() -> None:
     ]:
         print(f"  [{Fore.YELLOW}  OK  {Fore.WHITE}] {msg}")
         time.sleep(0.2)
-    print(f'\n{Fore.YELLOW}   ___\n  <   o>  PenguWarp OS\n  ( | )   v0.1.8 "Lemon" Testing\n  /___\\ \n')
+    print(f'\n{Fore.YELLOW}   ___\n  <   o>  PenguWarp OS\n  ( | )   v0.1.7 "Lemon" Testing\n  /___\\ \n')
 
 
 def _first_boot_setup() -> None:
-    from setup import run_setup
+    os.system("cls" if os.name == "nt" else "clear")
+    print(f"{Fore.YELLOW}╔══════════════════════════════════════════════════╗")
+    print(f'{Fore.YELLOW}║  ~ Welcome to PenguWarp OS "Lemon (Testing)"!  ~ ║')
+    print(f"{Fore.YELLOW}╚══════════════════════════════════════════════════╝\n")
+
+    S.user     = input(f"{Fore.YELLOW}Choose Username: {Fore.WHITE}").strip() or "user"
+    raw_pw     = input(f"{Fore.YELLOW}Choose Password: {Fore.WHITE}").strip()
+    S.hostname = input(f"{Fore.YELLOW}Choose Hostname: {Fore.WHITE}").strip() or "pengu"
+
     from system import hash_pw
-
-    data = run_setup()
-
-    hostname = data["hostname"]
-    username = data["username"]
-    password = data["password"]
-
-    S.hostname = hostname
-
-    # ── root: auto-created, home is ~, is_admin ───────────────────────────────
-    root_pw = hash_pw(str(__import__("uuid").uuid4()))   # random unguessable pw
-    S.users_list.append({
-        "username": "root",
-        "password": root_pw,
-        "is_admin": True,
-        "home":     "~",
-    })
-
-    # ── regular user: home is ~/usr/<username> ────────────────────────────────
-    S.users_list.append({
-        "username": username,
-        "password": hash_pw(password),
-        "is_admin": True,
-        "home":     f"~/usr/{username}",
-    })
-
-    user_home = f"~/usr/{username}"
-
-    # ── filesystem layout ─────────────────────────────────────────────────────
+    S.users_list.append({"username": S.user, "password": hash_pw(raw_pw), "is_admin": True})
     S.filesystem.update({
-        # root dirs
-        "~":        {"type": "dir", "contents": ["sys", "usr", "pkgs", "tmp"]},
-        "~/sys":    {"type": "dir", "contents": ["version"]},
-        "~/usr":    {"type": "dir", "contents": [username]},
-        "~/pkgs":   {"type": "dir", "contents": []},
-        "~/tmp":    {"type": "dir", "contents": []},
-        # system files
-        "~/sys/version": {"type": "file", "content": 'PenguWarp OS v0.1.8 "Lemon" Testing\nKernel: v0.1.8-lemon-dev_x86_64'},
-        # user home
-        user_home:                         {"type": "dir",  "contents": ["welcome.txt"]},
-        f"{user_home}/welcome.txt":        {"type": "file", "content": (
-            f'Welcome to PenguWarp OS "Lemon", {username}!\n\n'
-            f"Your home directory is {user_home}.\n"
-            "Type 'help' to see available commands.\n"
-            "Use 'pwpm search' to browse installable packages.\n\n"
+        "~": {"type": "dir", "contents": ["Documents", "Downloads", "Pictures", "Desktop", "welcome.txt"]},
+        "~/Documents": {"type": "dir", "contents": []},
+        "~/Downloads": {"type": "dir", "contents": []},
+        "~/Pictures":  {"type": "dir", "contents": []},
+        "~/Desktop":   {"type": "dir", "contents": []},
+        "~/welcome.txt": {"type": "file", "content": (
+            f'Welcome to PenguWarp OS "Lemon", {S.user}!\n\n'
+            "Explore around, and run 'pkgmgr search' to find packages.\n"
+            "Type 'help' to begin.\n\n"
             "Built with Python & Dear PyGui."
         )},
     })
-
-    # boot as the new regular user, starting in their home dir
-    S.user        = username
-    S.current_dir = user_home
-
     save_system()
+    print(f"\n{Fore.YELLOW}System initialized. Booting...")
+    time.sleep(1)
 
 
 # ── Tab completion ────────────────────────────────────────────────────────────
@@ -112,29 +88,24 @@ def _setup_readline() -> None:
     def completer(text: str, state: int) -> str | None:
         buf   = readline.get_line_buffer()
         parts = buf.split()
-        # ── command completion ─────────────────────────────────────────
+        # command completion
         if not parts or (len(parts) == 1 and not buf.endswith(" ")):
             all_cmds = list(COMMANDS.keys()) + S.installed_packages
             matches  = [c for c in all_cmds if c.startswith(text)]
             return matches[state] if state < len(matches) else None
-        # ── path completion ────────────────────────────────────────────
-        if "/" in text:
-            slash    = text.rfind("/")
-            dir_raw  = text[:slash] or "~"
-            prefix   = text[slash + 1:]
-            base_dir = S.resolve_path(dir_raw)
-        else:
-            base_dir = S.current_dir
-            prefix   = text
-
+        # path completion
+        prefix   = text
+        base_dir = S.current_dir
+        if "/" in prefix:
+            idx      = prefix.rfind("/")
+            base_dir = prefix[:idx] or "~"
+            prefix   = prefix[idx + 1:]
         contents = S.filesystem.get(base_dir, {}).get("contents", [])
         matches  = [i for i in contents if i.startswith(prefix)]
         if state < len(matches):
-            item      = matches[state]
-            full_path = f"{base_dir}/{item}" if base_dir != "~" else f"~/{item}"
-            suffix    = "/" if S.filesystem.get(full_path, {}).get("type") == "dir" else ""
-            dir_prefix = text[: text.rfind("/") + 1] if "/" in text else ""
-            return dir_prefix + item + suffix
+            item = matches[state]
+            full = f"~/{item}" if base_dir == "~" else f"{base_dir}/{item}"
+            return item + ("/" if S.filesystem.get(full, {}).get("type") == "dir" else "")
         return None
 
     readline.set_completer(completer)
@@ -151,7 +122,7 @@ def _shell_loop() -> None:
     while True:
         try:
             prompt = (
-                f"{Fore.YELLOW}{S.user} of {S.hostname}: "
+                f"{Fore.YELLOW}{S.user}@{S.hostname}"
                 f"{Fore.WHITE}:{Fore.YELLOW}{S.current_dir}{Fore.WHITE}$ "
             )
             line = input(prompt).strip()
