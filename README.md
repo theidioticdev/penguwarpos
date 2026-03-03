@@ -5,7 +5,7 @@
 ![Platform](https://img.shields.io/badge/platform-Python-blue?style=flat-square)
 ![License](https://img.shields.io/badge/license-GPL--3.0-green?style=flat-square)
 
-> Inspired by GNU/Linux and Unix philosophy
+> Inspired by GNU/Linux
 
 ---
 
@@ -16,7 +16,7 @@
 ```bash
 git clone -b testing https://github.com/theidioticdev/penguwarpos
 cd penguwarpos
-pip install colorama rich curses
+pip install colorama rich curses dearpygui
 python3 kernel.py
 ```
 
