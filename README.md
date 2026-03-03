@@ -1,7 +1,7 @@
 # 🐧 PenguWarp OS
 *A persistent Unix-inspired virtual OS built in Python*
 
-![Version](https://img.shields.io/badge/version-0.1.7%20%22Lemon%22-yellow?style=flat-square)
+![Version](https://img.shields.io/badge/version-0.1.8%20%22Lemon%22-yellow?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Python-blue?style=flat-square)
 ![License](https://img.shields.io/badge/license-GPL--3.0-green?style=flat-square)
 
@@ -11,29 +11,33 @@
 
 ## Setup
 
-**Requirements:** Python 3.7+, `colorama`, `tkinter`, `rich`
+**Requirements:** Python 3.7+, `colorama`, `dear pygui`, `rich`, `curses`
 
 ```bash
-git clone https://github.com/TheIdioticDev/penguwarpos
+git clone -b testing https://github.com/theidioticdev/penguwarpos
 cd penguwarpos
-pip install colorama rich
+pip install colorama rich curses
 python3 kernel.py
 ```
 
 **File structure:**
 ```
-PenguWarp/
-├── kernel.py  
+├── commands.py
+├── gui.py
+├── kernel.py
+├── LICENSE
+├── packages
+│   ├── cowsay.py
+│   ├── dashwarp.py
+│   ├── dungeon.py
+│   ├── matrix.py
+│   ├── snake.py
+│   ├── todo.py
+│   └── tpwdit.py
+├── README.md
 ├── repo.py
-├── packages/
-│   ├── snake.py
-│   ├── cowsay.py
-│   ├── matrix.py
-│   ├── todo.py
-│   ├── tpwdit.py
-│   └── dungeon.py
-
-└── penguwarp_system.json
+├── setup.py
+└── system.py
 ```
 
 ---
@@ -42,44 +46,51 @@ PenguWarp/
 
 | Command | Description |
 |---------|-------------|
-| `list` | List files in current directory |
+| `help` | Display command reference |
+| `list` | List files and directories |
 | `cd <dir>` | Change directory |
 | `whereami` | Print current path |
-| `mkdir <n>` | Create directory |
+| `mkdir <name>` | Create directory |
 | `mkfile <file>` | Create empty file |
 | `delete <file>` | Remove a file |
 | `rmdir <dir>` | Remove empty directory |
 | `read <file>` | Print file contents |
 | `echo <text>` | Print text |
-| `pwdit <file>` | Open line editor |
 | `run <script.pwe>` | Execute a .pwe script |
-| `pkgmgr <action>` | Package manager |
-| `startx` | Launch PenguWin desktop |
+| `pwdit <file>` | Open line editor |
+| `pwpm <action>` | Package manager |
+| `penguwin` | Launch PenguWin desktop |
 | `pyufetch` | System info |
 | `uname` | Kernel version |
 | `whoami` | Current user |
 | `clear` | Clear screen |
 | `poweroff` | Shutdown and save |
-
----
+| `usercn <name>` | Change username |
+| `hostcn <name>` | Change hostname |
+| `su <user>` | Switch user |
+| `userlist` | List all users |
+| `useradd <user>` | Add new user |
+| `passwd <user>` | Change password |
+| `adminrun <cmd>` | Run command as admin |
+| `promote <user>` | Grant admin privileges |
 
 ## Package Manager
 
 ```bash
-pkgmgr search           # browse available packages
-pkgmgr install <pkg>    # install a package
-pkgmgr remove <pkg>     # remove a package
-pkgmgr list             # show installed packages
+pwpm search           # browse available packages
+pwpm install <pkg>    # install a package
+pwpm remove <pkg>     # remove a package
+pwpm list             # show installed packages
 ```
 
-**Available packages:** `snake` `cowsay` `matrix` `todo` `dungeon`
+**Available packages:** `snake` `cowsay` `matrix` `todo` `dungeon` `tpwdit` `dashwarp`
 
 ---
 
 ## PenguWin Desktop
 
 ```bash
-startx
+penguwin
 ```
 
 Launches a Tkinter-based desktop with draggable windows, a dock, and the following apps: file browser, text editor (GPWDIT), calculator, paint, system info, and clock.
