@@ -6,7 +6,7 @@ AVAILABLE_PACKAGES = {
         "name": "Snake Game",
         "file": "snake.py",
         "description": "Classic snake game in terminal",
-        "version": "1.5",
+        "version": "0.2",
     },
     "cowsay": {
         "name": "Cowsay",
@@ -18,30 +18,42 @@ AVAILABLE_PACKAGES = {
         "name": "Matrix Rain",
         "file": "matrix.py",
         "description": "Cool matrix falling text effect",
-        "version": "2.0",
+        "version": "0.2",
     },
     "todo": {
         "name": "Todo List",
         "file": "todo.py",
         "description": "Simple todo list manager",
-        "version": "1.5",
+        "version": "0.1.5",
     },
     "dungeon": {
         "name": "Dungeon Crawler",
         "file": "dungeon.py",
         "description": "TUI Dungeon Crawler game",
-        "version": "1.0",
+        "version": "0.1",
     },
     "tpwdit": {
         "name": "TUI PWDIT",
         "file": "tpwdit.py",
         "description": "TUI PenguWarp eDITor",
-        "version": "1.0",
+        "version": "0.2",
     },
     "dashwarp": {
         "name": "DashWarp",
         "file": "dashwarp.py",
         "description": "TUI Dashboard app",
-        "version": "1.0",
+        "version": "0.1",
+    },
+    "penguwin": {
+        "name": "PenguWin DE",
+        "file": "gui.py",
+        "description": "PenguWarp Desktop Environment (Dear PyGui)",
+        "version": "0.1.8",
+    },
+    "pwlogin": {
+        "name": "PenguWin Login Manager",
+        "file": "loginmgr.py",
+        "description": "PenguWin DE Login Manager",
+        "version": "0.1.0"
     }
 }

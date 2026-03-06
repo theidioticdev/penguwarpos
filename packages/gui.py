@@ -35,6 +35,7 @@ _toast_timer: float = 0.0
 _terminal_pollers: set[str] = set()
 _terminal_output_pollers: dict[str, object] = {}
 
+
 def _toast(msg: str, color: tuple | None = None) -> None:
     _toast_queue.append((msg, color or GRV_GREEN))
 
@@ -50,27 +51,39 @@ def _apply_gruvbox_theme() -> None:
             dpg.add_theme_color(dpg.mvThemeCol_FrameBg,              GRV_BG1)
             dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered,       GRV_BG2)
             dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive,        GRV_BG2)
-            dpg.add_theme_color(dpg.mvThemeCol_TitleBg,              GRV_BG_HARD)
+            dpg.add_theme_color(dpg.mvThemeCol_TitleBg,
+                                GRV_BG_HARD)
             dpg.add_theme_color(dpg.mvThemeCol_TitleBgActive,        GRV_BG1)
-            dpg.add_theme_color(dpg.mvThemeCol_TitleBgCollapsed,     GRV_BG_HARD)
-            dpg.add_theme_color(dpg.mvThemeCol_Button,               GRV_ORANGE_DIM)
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered,        GRV_ORANGE)
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive,         GRV_YELLOW_DIM)
+            dpg.add_theme_color(
+                dpg.mvThemeCol_TitleBgCollapsed,     GRV_BG_HARD)
+            dpg.add_theme_color(dpg.mvThemeCol_Button,
+                                GRV_ORANGE_DIM)
+            dpg.add_theme_color(
+                dpg.mvThemeCol_ButtonHovered,        GRV_ORANGE)
+            dpg.add_theme_color(
+                dpg.mvThemeCol_ButtonActive,         GRV_YELLOW_DIM)
             dpg.add_theme_color(dpg.mvThemeCol_Text,                 GRV_FG)
             dpg.add_theme_color(dpg.mvThemeCol_TextDisabled,         GRV_GRAY)
             dpg.add_theme_color(dpg.mvThemeCol_Header,               GRV_BG2)
-            dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered,        GRV_ORANGE_DIM)
-            dpg.add_theme_color(dpg.mvThemeCol_HeaderActive,         GRV_ORANGE)
-            dpg.add_theme_color(dpg.mvThemeCol_ScrollbarBg,          GRV_BG_HARD)
+            dpg.add_theme_color(
+                dpg.mvThemeCol_HeaderHovered,        GRV_ORANGE_DIM)
+            dpg.add_theme_color(
+                dpg.mvThemeCol_HeaderActive,         GRV_ORANGE)
+            dpg.add_theme_color(
+                dpg.mvThemeCol_ScrollbarBg,          GRV_BG_HARD)
             dpg.add_theme_color(dpg.mvThemeCol_ScrollbarGrab,        GRV_BG2)
             dpg.add_theme_color(dpg.mvThemeCol_ScrollbarGrabHovered, GRV_GRAY)
             dpg.add_theme_color(dpg.mvThemeCol_Separator,            GRV_BG2)
             dpg.add_theme_color(dpg.mvThemeCol_Border,               GRV_BG2)
-            dpg.add_theme_color(dpg.mvThemeCol_MenuBarBg,            GRV_BG_HARD)
-            dpg.add_theme_color(dpg.mvThemeCol_NavHighlight,         GRV_ORANGE)
+            dpg.add_theme_color(
+                dpg.mvThemeCol_MenuBarBg,            GRV_BG_HARD)
+            dpg.add_theme_color(
+                dpg.mvThemeCol_NavHighlight,         GRV_ORANGE)
             dpg.add_theme_color(dpg.mvThemeCol_Tab,                  GRV_BG1)
-            dpg.add_theme_color(dpg.mvThemeCol_TabHovered,           GRV_ORANGE_DIM)
-            dpg.add_theme_color(dpg.mvThemeCol_TabActive,            GRV_ORANGE)
+            dpg.add_theme_color(dpg.mvThemeCol_TabHovered,
+                                GRV_ORANGE_DIM)
+            dpg.add_theme_color(
+                dpg.mvThemeCol_TabActive,            GRV_ORANGE)
             dpg.add_theme_style(dpg.mvStyleVar_WindowRounding, 8)
             dpg.add_theme_style(dpg.mvStyleVar_FrameRounding,  6)
             dpg.add_theme_style(dpg.mvStyleVar_GrabRounding,   6)
@@ -105,11 +118,12 @@ def _dpg_sysinfo() -> None:
     if dpg.does_item_exist("win_sysinfo"):
         dpg.delete_item("win_sysinfo")
 
-    uptime     = int(time.time() - S.start_time)
-    storage_kb = round(os.path.getsize(SYSTEM_FILE) / 1024, 2) if os.path.exists(SYSTEM_FILE) else 0
-    ram        = get_dynamic_ram()
-    m, s       = divmod(uptime, 60)
-    h, m       = divmod(m, 60)
+    uptime = int(time.time() - S.start_time)
+    storage_kb = round(os.path.getsize(SYSTEM_FILE) / 1024,
+                       2) if os.path.exists(SYSTEM_FILE) else 0
+    ram = get_dynamic_ram()
+    m, s = divmod(uptime, 60)
+    h, m = divmod(m, 60)
     uptime_str = f"{h:02d}:{m:02d}:{s:02d}"
 
     with dpg.window(label="Gardener -- System Info", tag="win_sysinfo",
@@ -142,10 +156,12 @@ def _dpg_sysinfo() -> None:
         dpg.add_separator()
         dpg.add_spacer(height=8)
 
-        ram_pct  = min(ram / 128, 1.0)
+        ram_pct = min(ram / 128, 1.0)
         disk_pct = min(storage_kb / 512, 1.0)
-        ram_col  = GRV_GREEN if ram_pct  < 0.6 else (GRV_YELLOW if ram_pct  < 0.85 else GRV_RED)
-        disk_col = GRV_GREEN if disk_pct < 0.6 else (GRV_YELLOW if disk_pct < 0.85 else GRV_RED)
+        ram_col = GRV_GREEN if ram_pct < 0.6 else (
+            GRV_YELLOW if ram_pct < 0.85 else GRV_RED)
+        disk_col = GRV_GREEN if disk_pct < 0.6 else (
+            GRV_YELLOW if disk_pct < 0.85 else GRV_RED)
 
         dpg.add_text("RAM Usage",  color=GRV_GRAY)
         _colored_progress_bar(ram_pct,  f"{ram} MB / 128 MB",         ram_col)
@@ -157,7 +173,8 @@ def _dpg_sysinfo() -> None:
         dpg.add_separator()
         dpg.add_spacer(height=4)
         dpg.add_text(
-            f"Session started  {time.strftime('%H:%M:%S', time.localtime(S.start_time))}",
+            f"Session started  {time.strftime(
+                '%H:%M:%S', time.localtime(S.start_time))}",
             color=GRV_GRAY,
         )
 
@@ -171,14 +188,17 @@ def _dpg_clock() -> None:
                     width=290, height=140, pos=(380, 300),
                     on_close=lambda: dpg.delete_item("win_clock")):
         dpg.add_spacer(height=4)
-        dpg.add_text(time.strftime("%H:%M:%S"),        tag="clock_text",   color=GRV_YELLOW)
-        dpg.add_text(time.strftime("%A, %B %d %Y"),    tag="clock_date",   color=GRV_GRAY)
+        dpg.add_text(time.strftime("%H:%M:%S"),
+                     tag="clock_text",   color=GRV_YELLOW)
+        dpg.add_text(time.strftime("%A, %B %d %Y"),
+                     tag="clock_date",   color=GRV_GRAY)
         dpg.add_separator()
         dpg.add_spacer(height=4)
         uptime = int(time.time() - S.start_time)
-        m, s   = divmod(uptime, 60)
-        h, m   = divmod(m, 60)
-        dpg.add_text(f"Uptime  {h:02d}:{m:02d}:{s:02d}", tag="clock_uptime", color=GRV_ORANGE)
+        m, s = divmod(uptime, 60)
+        h, m = divmod(m, 60)
+        dpg.add_text(f"Uptime  {h:02d}:{m:02d}:{s:02d}",
+                     tag="clock_uptime", color=GRV_ORANGE)
 
 
 # ── App: WarpCalc ─────────────────────────────────────────────────────────────
@@ -191,14 +211,16 @@ def _dpg_calculator() -> None:
     hist:     list[str] = []
 
     def _safe_eval(expr: str) -> str:
-        import ast, operator as op
+        import ast
+        import operator as op
         allowed = {ast.Add: op.add, ast.Sub: op.sub,
                    ast.Mult: op.mul, ast.Div: op.truediv, ast.USub: op.neg}
+
         def _ev(node):
             match node:
                 case ast.Constant(value=v) if isinstance(v, int | float): return float(v)
-                case ast.BinOp(left=l, op=o, right=r):  return allowed[type(o)](_ev(l), _ev(r))
-                case ast.UnaryOp(op=o, operand=v):       return allowed[type(o)](_ev(v))
+                case ast.BinOp(left=l, op=o, right=r): return allowed[type(o)](_ev(l), _ev(r))
+                case ast.UnaryOp(op=o, operand=v): return allowed[type(o)](_ev(v))
                 case _: raise ValueError
         res = _ev(ast.parse(expr, mode="eval").body)
         return str(int(res)) if res == int(res) else str(res)
@@ -208,15 +230,19 @@ def _dpg_calculator() -> None:
             try:
                 result = _safe_eval(expr_val[0])
                 hist.append(f"{expr_val[0]} = {result}")
-                if len(hist) > 5: hist.pop(0)
+                if len(hist) > 5:
+                    hist.pop(0)
                 expr_val[0] = result
                 if dpg.does_item_exist("calc_hist"):
                     dpg.set_value("calc_hist", "\n".join(hist))
             except Exception:
                 expr_val[0] = "Error"
-        elif b == "C":  expr_val[0] = ""
-        elif b == "⌫":  expr_val[0] = expr_val[0][:-1]
-        else:           expr_val[0] += b
+        elif b == "C":
+            expr_val[0] = ""
+        elif b == "⌫":
+            expr_val[0] = expr_val[0][:-1]
+        else:
+            expr_val[0] += b
         dpg.set_value("calc_display", expr_val[0])
 
     with dpg.window(label="WarpCalc", tag="win_calc",
@@ -240,15 +266,16 @@ def _dpg_calculator() -> None:
         for row in BTN_ROWS:
             with dpg.group(horizontal=True):
                 for b in row:
-                    col = (GRV_ORANGE_DIM if b in ("/*-+**%","/","*","-","+","**","%")
-                           else GRV_RED    if b == "C"
-                           else GRV_GREEN  if b == "="
-                           else (100,80,70,255) if b == "⌫"
+                    col = (GRV_ORANGE_DIM if b in ("/*-+**%", "/", "*", "-", "+", "**", "%")
+                           else GRV_RED if b == "C"
+                           else GRV_GREEN if b == "="
+                           else (100, 80, 70, 255) if b == "⌫"
                            else GRV_BG1)
                     with dpg.theme() as t:
                         with dpg.theme_component(dpg.mvButton):
                             dpg.add_theme_color(dpg.mvThemeCol_Button, col)
-                            dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 4)
+                            dpg.add_theme_style(
+                                dpg.mvStyleVar_FrameRounding, 4)
                     btn = dpg.add_button(label=b, width=54, height=44,
                                          callback=lambda s, a, u: click(u), user_data=b)
                     dpg.bind_item_theme(btn, t)
@@ -257,6 +284,7 @@ def _dpg_calculator() -> None:
 # ── App: File Browser ─────────────────────────────────────────────────────────
 
 _fb_path = ["~"]
+
 
 def _dpg_file_browser() -> None:
     global _fb_path
@@ -269,18 +297,20 @@ def _dpg_file_browser() -> None:
         dpg.set_value("fb_path_text", f"  {_fb_path[0]}")
 
         if _fb_path[0] != "~":
-            dpg.add_selectable(label="  ^  ..", parent="fb_list", callback=_go_up)
+            dpg.add_selectable(
+                label="  ^  ..", parent="fb_list", callback=_go_up)
 
         contents = filesystem.get(_fb_path[0], {}).get("contents", [])
-        dirs  = [i for i in contents
-                 if filesystem.get(f"~/{i}" if _fb_path[0]=="~" else f"{_fb_path[0]}/{i}", {}).get("type") == "dir"]
+        dirs = [i for i in contents
+                if filesystem.get(f"~/{i}" if _fb_path[0] == "~" else f"{_fb_path[0]}/{i}", {}).get("type") == "dir"]
         files = [i for i in contents if i not in dirs]
 
         for item in sorted(dirs) + sorted(files):
-            full   = f"~/{item}" if _fb_path[0] == "~" else f"{_fb_path[0]}/{item}"
+            full = f"~/{item}" if _fb_path[0] == "~" else f"{
+                _fb_path[0]}/{item}"
             is_dir = item in dirs
-            col    = GRV_YELLOW if is_dir else GRV_FG
-            icon   = "  [DIR] " if is_dir else "  [FILE] "
+            col = GRV_YELLOW if is_dir else GRV_FG
+            icon = "  [DIR] " if is_dir else "  [FILE] "
             dpg.add_selectable(label=f"{icon}{item}",
                                parent="fb_list", callback=_on_fb_click, user_data=item)
             kids = dpg.get_item_children("fb_list", 1)
@@ -294,15 +324,19 @@ def _dpg_file_browser() -> None:
                       f"  {len(dirs)} folder(s)   {len(files)} file(s)   {len(contents)} total")
 
     def _go_up() -> None:
-        parts       = _fb_path[0].split("/")
+        parts = _fb_path[0].split("/")
         _fb_path[0] = "/".join(parts[:-1]) if len(parts) > 1 else "~"
         refresh()
 
     def _on_fb_click(sender, app_data, user_data) -> None:
-        full  = f"~/{user_data}" if _fb_path[0] == "~" else f"{_fb_path[0]}/{user_data}"
+        full = f"~/{user_data}" if _fb_path[0] == "~" else f"{
+            _fb_path[0]}/{user_data}"
         entry = filesystem.get(full, {})
-        if   entry.get("type") == "dir":  _fb_path[0] = full; refresh()
-        elif entry.get("type") == "file": _dpg_text_viewer(user_data, entry["content"])
+        if entry.get("type") == "dir":
+            _fb_path[0] = full
+            refresh()
+        elif entry.get("type") == "file":
+            _dpg_text_viewer(user_data, entry["content"])
 
     with dpg.window(label="Tree -- File Browser", tag="win_fb",
                     width=500, height=480, pos=(120, 90),
@@ -312,7 +346,8 @@ def _dpg_file_browser() -> None:
             dpg.add_button(label="^ Up",      width=70,  callback=_go_up)
             dpg.add_button(label="~ Home",    width=80,
                            callback=lambda: (_fb_path.__setitem__(0, "~"), refresh()))
-            dpg.add_button(label="* Refresh", width=90,  callback=lambda: refresh())
+            dpg.add_button(label="* Refresh", width=90,
+                           callback=lambda: refresh())
         dpg.add_separator()
         dpg.add_text("~", tag="fb_path_text", color=GRV_YELLOW)
         dpg.add_separator()
@@ -353,25 +388,28 @@ def _dpg_pwdit(filename: str | None = None) -> None:
     if dpg.does_item_exist(tag):
         dpg.delete_item(tag)
 
-    cur_file    = [filename or "new_file.txt"]
+    cur_file = [filename or "new_file.txt"]
     is_modified = [False]
-    initial     = ""
+    initial = ""
     if filename:
-        path    = f"~/{filename}" if S.current_dir == "~" else f"{S.current_dir}/{filename}"
+        path = f"~/{filename}" if S.current_dir == "~" else f"{S.current_dir}/{filename}"
         initial = filesystem.get(path, {}).get("content", "")
 
     def _update_stats() -> None:
-        if not dpg.does_item_exist("pwdit_text"): return
+        if not dpg.does_item_exist("pwdit_text"):
+            return
         content = dpg.get_value("pwdit_text")
-        lines   = content.count("\n") + 1
-        words   = len(content.split()) if content.strip() else 0
-        mod     = "  [modified]" if is_modified[0] else ""
+        lines = content.count("\n") + 1
+        words = len(content.split()) if content.strip() else 0
+        mod = "  [modified]" if is_modified[0] else ""
         if dpg.does_item_exist("pwdit_stats"):
-            dpg.set_value("pwdit_stats", f"  Ln {lines}  Wrd {words}  Chr {len(content)}{mod}")
+            dpg.set_value("pwdit_stats", f"  Ln {lines}  Wrd {
+                          words}  Chr {len(content)}{mod}")
 
     def save() -> None:
         content = dpg.get_value("pwdit_text")
-        path    = f"~/{cur_file[0]}" if S.current_dir == "~" else f"{S.current_dir}/{cur_file[0]}"
+        path = f"~/{cur_file[0]
+                    }" if S.current_dir == "~" else f"{S.current_dir}/{cur_file[0]}"
         filesystem[path] = {"type": "file", "content": content}
         if cur_file[0] not in filesystem[S.current_dir]["contents"]:
             filesystem[S.current_dir]["contents"].append(cur_file[0])
@@ -397,7 +435,8 @@ def _dpg_pwdit(filename: str | None = None) -> None:
                     new = dpg.get_value("pwdit_saveas_input").strip()
                     if new:
                         cur_file[0] = new
-                        dpg.configure_item("win_pwdit", label=f"GPWDIT -- {new}")
+                        dpg.configure_item(
+                            "win_pwdit", label=f"GPWDIT -- {new}")
                         save()
                     dpg.delete_item("pwdit_saveas_popup")
                 dpg.add_button(label="Save",   width=110, callback=do_save_as)
@@ -411,17 +450,21 @@ def _dpg_pwdit(filename: str | None = None) -> None:
             dpg.add_button(label="[N] New",     width=80, callback=lambda: (
                 dpg.set_value("pwdit_text", ""),
                 cur_file.__setitem__(0, "new_file.txt"),
-                dpg.configure_item("win_pwdit", label="GPWDIT -- new_file.txt"),
+                dpg.configure_item(
+                    "win_pwdit", label="GPWDIT -- new_file.txt"),
                 dpg.set_value("pwdit_status", "  New file"),
                 _update_stats(),
             ))
-            dpg.add_button(label="[S] Save",    width=90,  callback=lambda: save())
-            dpg.add_button(label="[A] Save As", width=100, callback=lambda: save_as())
+            dpg.add_button(label="[S] Save",    width=90,
+                           callback=lambda: save())
+            dpg.add_button(label="[A] Save As", width=100,
+                           callback=lambda: save_as())
         dpg.add_separator()
         dpg.add_input_text(
             tag="pwdit_text", default_value=initial,
             multiline=True, width=-1, height=-50, tab_input=True,
-            callback=lambda: (is_modified.__setitem__(0, True), _update_stats()),
+            callback=lambda: (is_modified.__setitem__(
+                0, True), _update_stats()),
         )
         dpg.add_separator()
         with dpg.group(horizontal=True):
@@ -438,7 +481,7 @@ def _dpg_paint() -> None:
             dpg.delete_item(tag)
 
     current_color = [GRV_ORANGE_DIM]
-    brush_size    = [5]
+    brush_size = [5]
 
     COLORS = [GRV_BG, GRV_RED, GRV_ORANGE, GRV_YELLOW,
               GRV_GREEN, GRV_AQUA, GRV_FG, (255, 255, 255, 255)]
@@ -471,11 +514,13 @@ def _dpg_paint() -> None:
             dpg.add_slider_int(
                 tag="brush_slider", default_value=5, min_value=1, max_value=20,
                 width=100,
-                callback=lambda s, a: brush_size.__setitem__(0, dpg.get_value("brush_slider")),
+                callback=lambda s, a: brush_size.__setitem__(
+                    0, dpg.get_value("brush_slider")),
             )
             dpg.add_button(
                 label="Clear",
-                callback=lambda: dpg.delete_item("paint_canvas", children_only=True),
+                callback=lambda: dpg.delete_item(
+                    "paint_canvas", children_only=True),
             )
         dpg.add_separator()
         with dpg.drawlist(width=534, height=450, tag="paint_canvas"):
@@ -483,8 +528,10 @@ def _dpg_paint() -> None:
 
     with dpg.handler_registry(tag="paint_drag_handler"):
         def on_draw(sender, app_data) -> None:
-            if not dpg.does_item_exist("paint_canvas"): return
-            if not dpg.is_item_hovered("paint_canvas"):  return
+            if not dpg.does_item_exist("paint_canvas"):
+                return
+            if not dpg.is_item_hovered("paint_canvas"):
+                return
             x, y = dpg.get_drawing_mouse_pos()
             dpg.draw_circle((x, y), brush_size[0],
                             color=current_color[0], fill=current_color[0],
@@ -508,6 +555,7 @@ def _dpg_terminal() -> None:
             if s:
                 output_q.put(s)
             return len(s)
+
         def flush(self): pass
 
     def _strip_ansi(text: str) -> str:
@@ -516,10 +564,10 @@ def _dpg_terminal() -> None:
     def _append(text: str) -> None:
         if not dpg.does_item_exist("term_output"):
             return
-        clean   = _strip_ansi(text)
+        clean = _strip_ansi(text)
         current = dpg.get_value("term_output")
-        merged  = current + clean
-        lines   = merged.split("\n")
+        merged = current + clean
+        lines = merged.split("\n")
         if len(lines) > 300:
             lines = lines[-300:]
         dpg.set_value("term_output", "\n".join(lines))
@@ -528,7 +576,8 @@ def _dpg_terminal() -> None:
 
     def _update_prompt() -> None:
         if dpg.does_item_exist("term_prompt"):
-            dpg.set_value("term_prompt", f"{S.user}@{S.hostname}:{S.current_dir}$ ")
+            dpg.set_value("term_prompt", f"{
+                          S.user}@{S.hostname}:{S.current_dir}$ ")
 
     BLOCKED = {"startx", "poweroff", "clear", "cls"}
 
@@ -562,13 +611,15 @@ def _dpg_terminal() -> None:
 
         first_word = raw.split()[0]
         if first_word in BLOCKED:
-            _append(f"[terminal] '{first_word}' is not available in the GUI terminal\n\n")
+            _append(f"[terminal] '{
+                    first_word}' is not available in the GUI terminal\n\n")
             return
 
         # commands that need interactive input — run inline with a friendly message
         INPUT_CMDS = {"su", "passwd", "useradd", "adminrun"}
         if first_word in INPUT_CMDS:
-            _append(f"[terminal] '{first_word}' requires interactive input — use PWShell directly\n\n")
+            _append(f"[terminal] '{
+                    first_word}' requires interactive input — use PWShell directly\n\n")
             return
 
         cmd_running[0] = True
@@ -591,7 +642,8 @@ def _dpg_terminal() -> None:
             except queue.Empty:
                 break
         if drained:
-            dpg.set_y_scroll("term_scroll", dpg.get_y_scroll_max("term_scroll"))
+            dpg.set_y_scroll(
+                "term_scroll", dpg.get_y_scroll_max("term_scroll"))
 
     # register poller
     _terminal_output_pollers["win_terminal"] = _poll
@@ -646,7 +698,7 @@ def _dpg_app_launcher() -> None:
 
     APP_LIST = [
         ("File Browser",      _dpg_file_browser),
-        ("GPWDIT Editor",     lambda: _dpg_pwdit()),
+        ("GPWDIT Editor", lambda: _dpg_pwdit()),
         ("WarpCalc",          _dpg_calculator),
         ("PenguPaint",        _dpg_paint),
         ("ClockWarp",         _dpg_clock),
@@ -716,6 +768,11 @@ def _dpg_about() -> None:
 
 # ── Desktop / main entry ──────────────────────────────────────────────────────
 
+def _logout() -> None:
+    """Cleanly stop the render loop — destroy_context() handles the rest."""
+    dpg.stop_dearpygui()
+
+
 def start_gui() -> None:
     if not HAS_DPG:
         print(f"{Fore.RED}error: dearpygui not installed. "
@@ -735,20 +792,28 @@ def start_gui() -> None:
         dpg.add_menu_item(label=" PenguWarp ", enabled=False)
 
         with dpg.menu(label="Apps"):
-            dpg.add_menu_item(label="[F]  File Browser",     callback=_dpg_file_browser)
-            dpg.add_menu_item(label="[E]  GPWDIT Editor",    callback=lambda: _dpg_pwdit())
-            dpg.add_menu_item(label="[C]  WarpCalc",         callback=_dpg_calculator)
-            dpg.add_menu_item(label="[P]  PenguPaint",       callback=_dpg_paint)
-            dpg.add_menu_item(label="[K]  ClockWarp",        callback=_dpg_clock)
-            dpg.add_menu_item(label="[S]  Gardener",         callback=_dpg_sysinfo)
-            dpg.add_menu_item(label="[T]  Terminal",         callback=_dpg_terminal)
+            dpg.add_menu_item(label="[F]  File Browser",
+                              callback=_dpg_file_browser)
+            dpg.add_menu_item(label="[E]  GPWDIT Editor",
+                              callback=lambda: _dpg_pwdit())
+            dpg.add_menu_item(label="[C]  WarpCalc",
+                              callback=_dpg_calculator)
+            dpg.add_menu_item(label="[P]  PenguPaint",
+                              callback=_dpg_paint)
+            dpg.add_menu_item(label="[K]  ClockWarp",
+                              callback=_dpg_clock)
+            dpg.add_menu_item(label="[S]  Gardener",
+                              callback=_dpg_sysinfo)
+            dpg.add_menu_item(label="[T]  Terminal",
+                              callback=_dpg_terminal)
             dpg.add_separator()
-            dpg.add_menu_item(label="[L]  App Launcher",     callback=_dpg_app_launcher)
+            dpg.add_menu_item(label="[L]  App Launcher",
+                              callback=_dpg_app_launcher)
 
         with dpg.menu(label="System"):
             dpg.add_menu_item(label="About PenguWarp", callback=_dpg_about)
             dpg.add_separator()
-            dpg.add_menu_item(label="[X]  Logout", callback=lambda: dpg.stop_dearpygui())
+            dpg.add_menu_item(label="[X]  Logout", callback=_logout)
 
         # right-side status pills
         dpg.add_menu_item(label="",  tag="topbar_pkgs",  enabled=False)
@@ -765,17 +830,20 @@ def start_gui() -> None:
 
         dpg.add_spacer(height=400)
         with dpg.group(horizontal=False):
-            dpg.add_text("PENGUWARP WORKSTATION", color=GRV_YELLOW, tag="desktop_title")
-            dpg.add_text('v0.1.7 "Lemon" Testing', color=GRV_ORANGE, tag="desktop_sub")
+            dpg.add_text("PENGUWARP WORKSTATION",
+                         color=GRV_YELLOW, tag="desktop_title")
+            dpg.add_text('v0.1.7 "Lemon" Testing',
+                         color=GRV_ORANGE, tag="desktop_sub")
             dpg.add_spacer(height=4)
-            dpg.add_text(f"{S.user}@{S.hostname}", color=GRV_GRAY, tag="desktop_user")
+            dpg.add_text(f"{S.user}@{S.hostname}",
+                         color=GRV_GRAY, tag="desktop_user")
 
         # Sidebar icon launcher
         ICONS = [
             ("[F]\nTree",       _dpg_file_browser,    30,  50),
             ("[C]\nWarpCalc",   _dpg_calculator,      30, 155),
             ("[P]\nPenguPaint", _dpg_paint,           30, 260),
-            ("[G]\nGPWDIT",     lambda: _dpg_pwdit(), 30, 365),
+            ("[G]\nGPWDIT", lambda: _dpg_pwdit(), 30, 365),
             ("[S]\nGardener",   _dpg_sysinfo,         30, 470),
             ("[T]\nTerminal",   _dpg_terminal,        30, 575),
             ("[K]\nClock",      _dpg_clock,           30, 660),
@@ -803,12 +871,12 @@ def start_gui() -> None:
         # throttle to once per second for non-animation updates
         if int(now) != _last_sec[0]:
             _last_sec[0] = int(now)
-            ts     = time.strftime(" %H:%M:%S ")
+            ts = time.strftime(" %H:%M:%S ")
             uptime = int(now - S.start_time)
-            ram    = get_dynamic_ram()
-            pkgs   = len(installed_packages)
-            m, s   = divmod(uptime, 60)
-            h, m   = divmod(m, 60)
+            ram = get_dynamic_ram()
+            pkgs = len(installed_packages)
+            m, s = divmod(uptime, 60)
+            h, m = divmod(m, 60)
 
             for tag, val in [
                 ("topbar_clock",  ts),
@@ -823,7 +891,8 @@ def start_gui() -> None:
             if dpg.does_item_exist("clock_date"):
                 dpg.set_value("clock_date",   time.strftime("%A, %B %d %Y"))
             if dpg.does_item_exist("clock_uptime"):
-                dpg.set_value("clock_uptime", f"Uptime  {h:02d}:{m:02d}:{s:02d}")
+                dpg.set_value("clock_uptime", f"Uptime  {
+                              h:02d}:{m:02d}:{s:02d}")
 
         # center desktop branding
         if dpg.does_item_exist("win_desktop"):
@@ -869,4 +938,5 @@ def start_gui() -> None:
         _render_loop()
         dpg.render_dearpygui_frame()
 
+    dpg.close_viewport()
     dpg.destroy_context()

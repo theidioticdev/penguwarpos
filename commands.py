@@ -339,15 +339,10 @@ def cmd_pwpm(args: list[str]) -> None:
 
 
 def cmd_penguwin(args: list[str]) -> None:
-    print(f"{Fore.YELLOW}Loading Desktop Environment...")
-    for i in range(11):
-        sys.stdout.write(f"\r[{'#' * i}{'.' * (10 - i)}] {i * 10}%")
-        sys.stdout.flush()
-        time.sleep(0.08)
-    print("\n")
-    from gui import start_gui
-    start_gui()
-    print(f"{Fore.YELLOW}Desktop closed. Back in PWShell.{Fore.WHITE}")
+    if "penguwin" not in S.installed_packages:
+        print(f"{Fore.RED}penguwin: not installed — run: {Fore.YELLOW}pwpm install penguwin{Fore.WHITE}")
+        return
+    _run_package("penguwin", args)
 
 
 def cmd_poweroff(args: list[str]) -> None:
@@ -515,7 +510,6 @@ COMMANDS: dict[str, object] = {
     "pwdit":    cmd_pwdit,
     "run":      cmd_run,
     "pwpm":     cmd_pwpm,
-    "penguwin": cmd_penguwin,
     "poweroff": cmd_poweroff,
     "rmdir":    cmd_rmdir,
     "usercn":   cmd_usercn,
@@ -537,6 +531,8 @@ def execute_command(line: str) -> None:
 
     if cmd_name in COMMANDS:
         COMMANDS[cmd_name](args)  # type: ignore[operator]
+    elif cmd_name == "penguwin":
+        cmd_penguwin(args)
     elif cmd_name in S.installed_packages and repo is not None:
         _run_package(cmd_name, args)
     else:

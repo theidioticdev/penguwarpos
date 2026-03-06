@@ -1,10 +1,10 @@
-# DashWarp - a TUI Dashboard app for PenguWarp OS
 import curses
 import datetime
 import system as S
 from system import save_system
 
-# ── Colors ────────────────────────────────────────────────────────────────────
+# ── Colors ─────────────────────────────────────────────────────────────────
+
 
 def _init_colors():
     curses.start_color()
@@ -17,15 +17,17 @@ def _init_colors():
     curses.init_pair(6, curses.COLOR_WHITE,   -1)  # dim
     curses.init_pair(7, curses.COLOR_MAGENTA, -1)  # clock
 
-YEL = lambda: curses.color_pair(1) | curses.A_BOLD
-FG  = lambda: curses.color_pair(2)
-GRN = lambda: curses.color_pair(3) | curses.A_BOLD
-CYN = lambda: curses.color_pair(4) | curses.A_BOLD
-RED = lambda: curses.color_pair(5) | curses.A_BOLD
-DIM = lambda: curses.color_pair(6) | curses.A_DIM
-MAG = lambda: curses.color_pair(7) | curses.A_BOLD
 
-# ── Safe draw ─────────────────────────────────────────────────────────────────
+def YEL(): return curses.color_pair(1) | curses.A_BOLD
+def FG(): return curses.color_pair(2)
+def GRN(): return curses.color_pair(3) | curses.A_BOLD
+def CYN(): return curses.color_pair(4) | curses.A_BOLD
+def RED(): return curses.color_pair(5) | curses.A_BOLD
+def DIM(): return curses.color_pair(6) | curses.A_DIM
+def MAG(): return curses.color_pair(7) | curses.A_BOLD
+
+# ── Safe draw ──────────────────────────────────────────────────────────────
+
 
 def _safe(win, y, x, text, attr=0):
     h, w = win.getmaxyx()
@@ -68,9 +70,9 @@ def _save_todos(todos: list):
 # ── Filesystem helpers ────────────────────────────────────────────────────────
 
 def _get_dir_contents(path: str) -> list:
-    node     = S.filesystem.get(path, {})
+    node = S.filesystem.get(path, {})
     contents = node.get("contents", [])
-    entries  = []
+    entries = []
     if path != "~":
         entries.append(("..", "nav"))
     for item in contents:
@@ -84,11 +86,11 @@ def _get_dir_contents(path: str) -> list:
 
 def _draw_clock(win):
     _border(win, "  Clock  ", MAG())
-    h, w  = win.getmaxyx()
-    now   = datetime.datetime.now()
-    tstr  = now.strftime("%I:%M:%S %p")
-    dstr  = now.strftime("%A, %B %d %Y")
-    ustr  = f"{S.user}@{S.hostname}"
+    h, w = win.getmaxyx()
+    now = datetime.datetime.now()
+    tstr = now.strftime("%I:%M:%S %p")
+    dstr = now.strftime("%A, %B %d %Y")
+    ustr = f"{S.user}@{S.hostname}"
 
     _safe(win, 2, max(0, (w - len(tstr)) // 2), tstr,  MAG())
     _safe(win, 3, max(0, (w - len(dstr)) // 2), dstr,  DIM())
@@ -110,7 +112,8 @@ def _draw_todo(win, todos: list, sel: int, active: bool):
             if row >= h - 2:
                 break
             prefix = "> " if (i == sel and active) else "  "
-            attr   = (GRN() | curses.A_REVERSE) if (i == sel and active) else FG()
+            attr = (GRN() | curses.A_REVERSE) if (
+                i == sel and active) else FG()
             _safe(win, row, 2, f"{prefix}{i+1}. {task}", attr)
 
     if active:
@@ -162,7 +165,8 @@ def _read_input(stdscr, prompt: str, y: int, x: int, width: int) -> str:
     def _redraw():
         field = (prompt + "".join(buf)).ljust(width)[:width]
         try:
-            stdscr.addstr(y, x, field, curses.color_pair(2) | curses.A_UNDERLINE)
+            stdscr.addstr(y, x, field, curses.color_pair(2)
+                          | curses.A_UNDERLINE)
             stdscr.move(y, x + len(prompt) + len(buf))
         except curses.error:
             pass
@@ -193,29 +197,29 @@ def _dashboard(stdscr):
     stdscr.timeout(500)
     _init_colors()
 
-    focus     = 0   # 0 = todo, 1 = fs
-    todo_sel  = 0
-    fs_sel    = 0
-    fs_path   = S.current_dir
-    todos     = _get_todos()
+    focus = 0   # 0 = todo, 1 = fs
+    todo_sel = 0
+    fs_sel = 0
+    fs_path = S.current_dir
+    todos = _get_todos()
     fs_entries = _get_dir_contents(fs_path)
 
     while True:
         stdscr.erase()
         sh, sw = stdscr.getmaxyx()
 
-        clock_h  = 8
+        clock_h = 8
         bottom_h = max(4, sh - clock_h - 1)
-        half_w   = sw // 2
+        half_w = sw // 2
 
         # panels
         clock_win = stdscr.derwin(clock_h, sw, 0, 0)
-        todo_win  = stdscr.derwin(bottom_h, half_w, clock_h, 0)
-        fs_win    = stdscr.derwin(bottom_h, sw - half_w, clock_h, half_w)
+        todo_win = stdscr.derwin(bottom_h, half_w, clock_h, 0)
+        fs_win = stdscr.derwin(bottom_h, sw - half_w, clock_h, half_w)
 
         _draw_clock(clock_win)
         _draw_todo(todo_win,  todos,      todo_sel, focus == 0)
-        _draw_fs  (fs_win,    fs_path, fs_entries, fs_sel,    focus == 1)
+        _draw_fs(fs_win,    fs_path, fs_entries, fs_sel,    focus == 1)
 
         hint = " Tab:switch panels   Q:quit "
         _safe(stdscr, sh - 1, max(0, (sw - len(hint)) // 2), hint, YEL())
@@ -267,10 +271,11 @@ def _dashboard(stdscr):
                     if name == "..":
                         fs_path = S.resolve_path(f"{fs_path}/..")
                     elif kind == "dir":
-                        new = f"{fs_path}/{name}" if fs_path != "~" else f"~/{name}"
+                        new = f"{
+                            fs_path}/{name}" if fs_path != "~" else f"~/{name}"
                         fs_path = new
                     fs_entries = _get_dir_contents(fs_path)
-                    fs_sel     = 0
+                    fs_sel = 0
 
 
 def run():

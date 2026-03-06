@@ -55,7 +55,7 @@ COMMAND_DESC: dict[str, str] = {
     "pwdit":    "Open the PenguWarp line editor for files",
     "pyufetch": "Show system hardware and OS branding",
     "clear":    "Wipe the terminal screen",
-    "penguwin": "Launch the PenguWin GUI environment",
+    "penguwin": "Launch PenguWin DE (install via: pwpm install penguwin)",
     "pwpm":     "Manage packages (install/remove/list/search)",
     "poweroff": "Shutdown the system and save all changes",
     "rmdir":    "Remove an empty directory",
