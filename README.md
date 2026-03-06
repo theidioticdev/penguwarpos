@@ -1,123 +1,163 @@
 # 🐧 PenguWarp OS
-*A persistent Unix-inspired virtual OS built in Python*
 
-![Version](https://img.shields.io/badge/version-0.1.6%20%22Peach%22-orange?style=flat-square)
-![Platform](https://img.shields.io/badge/platform-Python-blue?style=flat-square)
-![License](https://img.shields.io/badge/license-GPL--3.0-green?style=flat-square)
-
-> Inspired by GNU/Linux and Unix philosophy
+> An OS simulator made in Python so Linux newbies can learn how to navigate their system from a terminal — and break stuff without messing up their actual system.
 
 ---
 
-## Setup
+## What is this?
 
-**Requirements:** Python 3.7+, `colorama`, `tkinter`, `rich`
+PenguWarp OS is an interactive terminal simulator that gives beginners a safe sandbox to get comfortable with the command line. No risk of deleting something important, no cryptic commands — just a clean environment to learn how terminals actually work.
+
+Instead of throwing you into real bash and watching you panic, PenguWarp gives you a simplified shell called **PWShell** with commands that actually make sense:
+
+| PenguWarp  | Real Linux | What it does               |
+|------------|------------|----------------------------|
+| `read`     | `cat`      | Read a file                |
+| `list`     | `ls`       | List directory contents    |
+| `mkfile`   | `touch`    | Create a new file          |
+| `delete`   | `rm`       | Delete a file              |
+| `mkdir`    | `mkdir`    | Create a directory         |
+| `rmdir`    | `rmdir`    | Remove an empty directory  |
+| `cd`       | `cd`       | Navigate directories       |
+| `whereami` | `pwd`      | Show current directory     |
+| `echo`     | `echo`     | Print text                 |
+| `uname`    | `uname`    | Show system/kernel info    |
+| `whoami`   | `whoami`   | Show current user          |
+| `clear`    | `clear`    | Clear the terminal         |
+| `run`      | `bash`     | Execute a `.pwe` script    |
+| `pyufetch` | `neofetch` | Show system info + branding|
+| `poweroff` | `shutdown` | Shutdown and save          |
+
+Once you get comfortable with how terminals work, making the jump to real Linux feels way less scary.
+
+---
+
+## Getting Started
+
+**Requirements:** Python 3.10+, `colorama`, `dearpygui` (optional, for GUI)
 
 ```bash
-git clone https://github.com/TheIdioticDev/penguwarpos
+git clone https://github.com/theidioticdev/penguwarpos                   # for stable release
+git clone -b testing https://github.com/theidioticdev/penguwarpos        # for testing branch
 cd penguwarpos
-pip install colorama rich
-python3 kernel.py
+pip install colorama
+pip install curses
+pip install dearpygui
+python kernel.py
 ```
 
-**File structure:**
-```
-PenguWarp/
-├── kernel.py
-├── repo.py
-├── packages/
-│   ├── snake.py
-│   ├── cowsay.py
-│   ├── matrix.py
-│   ├── todo.py
-│   └── dungeon.py
-└── penguwarp_system.json
-```
+On first boot, a curses TUI installer walks you through setting up your hostname and user. After that, you're dropped straight into PWShell.
 
 ---
 
-## PWShell Commands
+## Multi-User System
 
-| Command | Description |
-|---------|-------------|
-| `list` | List files in current directory |
-| `cd <dir>` | Change directory |
-| `whereami` | Print current path |
-| `mkdir <n>` | Create directory |
-| `mkfile <file>` | Create empty file |
-| `delete <file>` | Remove a file |
-| `rmdir <dir>` | Remove empty directory |
-| `read <file>` | Print file contents |
-| `echo <text>` | Print text |
-| `pwdit <file>` | Open line editor |
-| `run <script.pwe>` | Execute a .pwe script |
-| `pkgmgr <action>` | Package manager |
-| `startx` | Launch PenguWin desktop |
-| `pyufetch` | System info |
-| `uname` | Kernel version |
-| `whoami` | Current user |
-| `clear` | Clear screen |
-| `poweroff` | Shutdown and save |
+PenguWarp has a real permission hierarchy:
+
+- **root** — exists but is inaccessible. Its password is randomly generated at first boot and never exposed.
+- **first user** — automatically becomes the sudoer (admin).
+- **any other user** — standard user. Must use `adminrun` to run privileged commands.
+
+### User commands
+
+| Command    | What it does                        |
+|------------|-------------------------------------|
+| `useradd`  | Add a new user (admin only)         |
+| `userlist` | List all users                      |
+| `su`       | Switch to another user              |
+| `usercn`   | Change your username                |
+| `hostcn`   | Change the hostname                 |
+| `passwd`   | Change a user's password            |
+| `promote`  | Grant admin privileges to a user    |
+| `adminrun` | Run a command with admin privileges |
 
 ---
 
-## Package Manager
+## Package Manager — PWPM
+
+PenguWarp has its own package manager. Install, remove, search, and list packages straight from PWShell.
 
 ```bash
-pkgmgr search           # browse available packages
-pkgmgr install <pkg>    # install a package
-pkgmgr remove <pkg>     # remove a package
-pkgmgr list             # show installed packages
+pwpm search        # browse available packages
+pwpm install snake # install a package
+pwpm remove snake  # remove a package
+pwpm list          # list installed packages
 ```
 
-**Available packages:** `snake` `cowsay` `matrix` `todo` `dungeon`
+### Available packages
+
+| Package     | Description                                        |
+|-------------|----------------------------------------------------|
+| `snake`     | Classic snake game (auto-play with A* pathfinding) |
+| `cowsay`    | Make a cow say things                              |
+| `matrix`    | Matrix rain effect in terminal                     |
+| `todo`      | CLI todo list manager                              |
+| `dungeon`   | TUI dungeon crawler with procedural map generation |
+| `tpwdit`    | TUI text editor (PenguWarp eDITor)                 |
+| `dashwarp`  | TUI dashboard with clock, todos, and filesystem browser |
+| `penguwin`  | PenguWin Desktop Environment          |
+| `pwlogin`   | PenguWin graphical login manager      |
 
 ---
 
-## PenguWin Desktop
+## PenguWin Desktop Environment
+
+Install `penguwin` via PWPM to get a full graphical desktop environment built with **Dear PyGui**, themed in Gruvbox. On next boot, the graphical **LightWarp Login Manager** launches automatically — authenticate and you're in the DE.
 
 ```bash
-startx
+pwpm install penguwin
+pwpm install pwlogin
+poweroff  # reboot to trigger the GUI login
 ```
-
-Launches a Tkinter-based desktop with draggable windows, a dock, and the following apps: file browser, text editor (GPWDIT), calculator, paint, system info, and clock.
 
 ---
 
-## Scripting (.pwe)
+## Built-in Editor — pwdit
+
+PenguWarp ships with a built-in line editor:
 
 ```bash
-# example.pwe
-echo "Hello from PenguWarp!"
-mkdir projects
-cd projects
-mkfile README.md
+pwdit filename.txt
 ```
 
-Run with `run example.pwe`. Supports syntax highlighting in GPWDIT.
+For a richer TUI editing experience, install `tpwdit` via PWPM.
+and for a graphical, windows-like editing experience, use GPWDIT via PenguWin
+---
+
+## Other Features
+
+- 🐧 **Boot animation** — animated boot sequence with progress bar and a blinking penguin
+- 🐧 **Curses TUI installer** — first-boot setup with a proper terminal UI
+- 🐧 **Tab completion** — for both commands and filesystem paths
+- 🐧 **Command history** — arrow keys to navigate previous commands
+- 🐧 **Scripting** — write `.pwe` scripts and run them with `run`
+- 🐧 **Persistent state** — filesystem, users, and installed packages all save to disk
 
 ---
 
-## Version History
+## Branches
 
-| Version | Codename | Highlights |
-|---------|----------|------------|
-| **v0.1.6** | 🍑 Peach | Dungeon Crawler, GRV theme cleanup, bug fixes |
-| **v0.1.5** | 🥭 Mango | Package manager, tab completion, security fixes |
-| **v0.1.4** | 🍎 Apple | PenguWin desktop environment |
-| **v0.1.3** | 🍌 Banana | Dynamic storage, colored output |
-| **v0.1.2** | 🍊 Orange | Script support (.pwe files) |
-| **v0.1.1** | 🍓 Strawberry | Persistent filesystem |
-| **v0.1.0** | 🍇 Grape | Initial release |
+| Branch    | Description                    |
+|-----------|--------------------------------|
+| `main`    | Stable releases                |
+| `testing` | Latest features, may have bugs |
 
 ---
 
-## Roadmap
+## Why?
 
-- **v0.2.0 "Dragon Fruit"** — multi-user support, permissions, GUI themes
-- **v0.3.0 "Kiwi"** — simulated networking, expanded package repo
-- **v1.0.0 "Watermelon"** — stable release, plugin system, advanced scripting
+Because `cat`, `ls`, `touch`, and `rm` are terrible names for commands and everyone deserves a less terrifying introduction to the terminal.
 
 ---
 
-*Built by **TheIdioticDev** with Python, Tkinter, Colorama, and Rich*
+## Dependencies
+
+- `colorama` — terminal colors
+- `curses` — TUI installer, dashwarp, tpwdit, dungeon (stdlib on Linux/macOS)
+- `dearpygui` — PenguWin DE and graphical login manager (optional)
+
+---
+
+## License
+
+Check `LICENSE` in the repo.
