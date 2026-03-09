@@ -77,7 +77,8 @@ def _draw_frame(penguin_art, status_line="", progress=0, show_status=False):
         print(f"         {Fore.YELLOW}{line}")
     print()
     print(
-        f'         {Fore.WHITE}PenguWarp OS  {Fore.YELLOW}v0.1.8 "Lemon"{Fore.WHITE}  [Testing]'
+        f'         {Fore.WHITE}PenguWarp OS  {
+            Fore.YELLOW}v0.1.8 "Lemon"{Fore.WHITE}  [Testing]'
     )
     print()
     if show_status and status_line:
@@ -88,7 +89,8 @@ def _draw_frame(penguin_art, status_line="", progress=0, show_status=False):
     if progress > 0:
         bar_len = 40
         filled = int(bar_len * progress / 100)
-        bar = f"{Fore.YELLOW}{'█' * filled}{Fore.WHITE}{'░' * (bar_len - filled)}"
+        bar = f"{Fore.YELLOW}{
+            '█' * filled}{Fore.WHITE}{'░' * (bar_len - filled)}"
         print(f"\n  [{bar}{Fore.WHITE}] {Fore.YELLOW}{progress}%")
 
 
@@ -118,7 +120,8 @@ def _boot_splash() -> None:
             show_status=False,
         )
         time.sleep(0.18)
-    _draw_frame(PENGUIN, f"{Fore.GREEN}Boot complete!", progress=100, show_status=False)
+    _draw_frame(PENGUIN, f"{Fore.GREEN}Boot complete!",
+                progress=100, show_status=False)
     time.sleep(0.4)
     _clear()
 
@@ -213,7 +216,7 @@ def _setup_readline() -> None:
         if "/" in text:
             slash = text.rfind("/")
             dir_raw = text[:slash] or "~"
-            prefix = text[slash + 1 :]
+            prefix = text[slash + 1:]
             base_dir = S.resolve_path(dir_raw)
         else:
             base_dir = S.current_dir
@@ -223,8 +226,10 @@ def _setup_readline() -> None:
         matches = [i for i in contents if i.startswith(prefix)]
         if state < len(matches):
             item = matches[state]
-            full_path = f"{base_dir}/{item}" if base_dir != "~" else f"~/{item}"
-            suffix = "/" if S.filesystem.get(full_path, {}).get("type") == "dir" else ""
+            full_path = f"{
+                base_dir}/{item}" if base_dir != "~" else f"~/{item}"
+            suffix = "/" if S.filesystem.get(full_path,
+                                             {}).get("type") == "dir" else ""
             dir_prefix = text[: text.rfind("/") + 1] if "/" in text else ""
             return dir_prefix + item + suffix
         return None
@@ -264,26 +269,16 @@ if __name__ == "__main__":
     else:
         _boot_splash()
 
-    # ── Boot to GUI login manager if penguwin is installed ────────────────────
+    # ── Boot to GUI if penguwin is installed ─────────────────────────────────
     if "penguwin" in S.installed_packages:
-        from packages import loginmgr
-
-        login_ok = loginmgr.start_login()
-        if login_ok:
+        try:
             from packages.gui import start_gui
-
-            print(f"{Fore.YELLOW}Loading PenguWin Desktop Environment...")
-            for i in range(11):
-                import sys as _sys
-
-                _sys.stdout.write(f"\r[{'#' * i}{'.' * (10 - i)}] {i * 10}%")
-                _sys.stdout.flush()
-                import time as _t
-
-                _t.sleep(0.06)
-            print("\n")
-            start_gui()
-            print(f"{Fore.YELLOW}Desktop closed. Back in PWShell.{Fore.WHITE}")
-        # login cancelled / window closed → fall through to shell
+            result = start_gui()   # 'logout' | 'tty' | 'quit'
+            if result == "tty":
+                print(f"{Fore.YELLOW}Dropped to PWShell.{Fore.WHITE}")
+            # all paths fall through to _shell_loop()
+        except ImportError:
+            print(f"{Fore.RED}pygame not available — falling back to PWShell{
+                  Fore.WHITE}")
 
     _shell_loop()

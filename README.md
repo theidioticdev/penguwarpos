@@ -6,9 +6,19 @@
 
 ## What is this?
 
-PenguWarp OS is an interactive terminal simulator that gives beginners a safe sandbox to get comfortable with the command line. No risk of deleting something important, no cryptic commands — just a clean environment to learn how terminals actually work.
+PenguWarp OS is an interactive terminal simulator that gives beginners a safe sandbox to get comfortable with the command line. No risk of deleting something important, no cryptic commands, just a clean environment to learn how terminals actually work.
 
 Instead of throwing you into real bash and watching you panic, PenguWarp gives you a simplified shell called **PWShell** with commands that actually make sense:
+
+## why?
+
+because `cat`, `ls`, `touch`, and `rm` are terrible names for commands and everyone deserves a less terrifying introduction to the terminal.
+
+
+---
+
+
+
 
 | PenguWarp  | Real Linux | What it does               |
 |------------|------------|----------------------------|
@@ -41,8 +51,8 @@ git clone https://github.com/theidioticdev/penguwarpos                   # for s
 git clone -b testing https://github.com/theidioticdev/penguwarpos        # for testing branch
 cd penguwarpos
 pip install colorama
-pip install curses
-pip install dearpygui
+pip install stdlib (Linux and macOS)
+pip install pygame
 python kernel.py
 ```
 
@@ -96,13 +106,12 @@ pwpm list          # list installed packages
 | `tpwdit`    | TUI text editor (PenguWarp eDITor)                 |
 | `dashwarp`  | TUI dashboard with clock, todos, and filesystem browser |
 | `penguwin`  | PenguWin Desktop Environment          |
-| `pwlogin`   | PenguWin graphical login manager      |
 
 ---
 
 ## PenguWin Desktop Environment
 
-Install `penguwin` via PWPM to get a full graphical desktop environment built with **Dear PyGui**, themed in Gruvbox. On next boot, the graphical **LightWarp Login Manager** launches automatically — authenticate and you're in the DE.
+Install `penguwin` via PWPM to get a full graphical desktop environment built with **pygame**, themed in Gruvbox. On next boot, the graphical **LightWarp Login Manager** launches automatically — authenticate and you're in the DE.
 
 ```bash
 pwpm install penguwin
@@ -144,20 +153,15 @@ and for a graphical, windows-like editing experience, use GPWDIT via PenguWin
 
 ---
 
-## Why?
 
-Because `cat`, `ls`, `touch`, and `rm` are terrible names for commands and everyone deserves a less terrifying introduction to the terminal.
-
----
-
-## Dependencies
+## dependencies
 
 - `colorama` — terminal colors
-- `curses` — TUI installer, dashwarp, tpwdit, dungeon (stdlib on Linux/macOS)
-- `dearpygui` — PenguWin DE and graphical login manager (optional)
+- `curses` — tui installer, dashwarp, tpwdit, dungeon (stdlib on linux/macos)
+- `dearpygui` — penguwin de and graphical login manager (optional)
 
 ---
 
-## License
+## license
 
-Check `LICENSE` in the repo.
+check `license` in the repo.

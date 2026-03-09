@@ -1,0 +1,80 @@
+{
+  "users": [
+    {
+      "username": "root",
+      "password": "2836f2c2b1c90dac3eae942bd2a22be709348975d0d0b6a8feeabfdd21589e99",
+      "is_admin": true,
+      "home": "~"
+    },
+    {
+      "username": "admin",
+      "password": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+      "is_admin": true,
+      "home": "~/usr/admin"
+    },
+    {
+      "username": "mostafa",
+      "password": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "is_admin": false,
+      "home": "~/usr/mostafa"
+    }
+  ],
+  "system": {
+    "username": "mostafa",
+    "hostname": "home",
+    "first_boot": false
+  },
+  "filesystem": {
+    "~": {
+      "type": "dir",
+      "contents": [
+        "sys",
+        "usr",
+        "pkgs",
+        "tmp"
+      ]
+    },
+    "~/sys": {
+      "type": "dir",
+      "contents": [
+        "version"
+      ]
+    },
+    "~/usr": {
+      "type": "dir",
+      "contents": [
+        "admin",
+        "mostafa"
+      ]
+    },
+    "~/pkgs": {
+      "type": "dir",
+      "contents": []
+    },
+    "~/tmp": {
+      "type": "dir",
+      "contents": []
+    },
+    "~/sys/version": {
+      "type": "file",
+      "content": "PenguWarp OS v0.1.8 \"Lemon\" Testing\nKernel: v0.1.8-lemon-dev_x86_64"
+    },
+    "~/usr/admin": {
+      "type": "dir",
+      "contents": [
+        "welcome.txt"
+      ]
+    },
+    "~/usr/admin/welcome.txt": {
+      "type": "file",
+      "content": "Welcome to PenguWarp OS \"Lemon\", admin!\n\nYour home directory is ~/usr/admin.\nType 'help' to see available commands.\nUse 'pwpm search' to browse installable packages.\n\nBuilt with Python & Dear PyGui."
+    },
+    "~/usr/mostafa": {
+      "type": "dir",
+      "contents": []
+    }
+  },
+  "installed_packages": [
+    "snake"
+  ]
+}

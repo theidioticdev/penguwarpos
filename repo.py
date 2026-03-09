@@ -36,7 +36,7 @@ AVAILABLE_PACKAGES = {
         "name": "TUI PWDIT",
         "file": "tpwdit.py",
         "description": "TUI PenguWarp eDITor",
-        "version": "0.2",
+        "version": "0.3",
     },
     "dashwarp": {
         "name": "DashWarp",
@@ -47,13 +47,7 @@ AVAILABLE_PACKAGES = {
     "penguwin": {
         "name": "PenguWin DE",
         "file": "gui.py",
-        "description": "PenguWarp Desktop Environment (Dear PyGui)",
-        "version": "0.1.8",
+        "description": "PenguWarp Desktop Environment (PyGame)",
+        "version": "0.2",
     },
-    "pwlogin": {
-        "name": "PenguWin Login Manager",
-        "file": "loginmgr.py",
-        "description": "PenguWin DE Login Manager",
-        "version": "0.1.0"
-    }
 }
