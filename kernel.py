@@ -179,7 +179,8 @@ def boot_sequence() -> None:
         print(f"  [{Fore.YELLOW}  OK  {Fore.WHITE}] {log}")
         time.sleep(0.2)
     print(
-        f'\n{Fore.YELLOW}   ___\n  <   o>  PenguWarp OS\n  ( | )   v0.1.6 "Peach"\n  /___\\ \n'
+        f'\n{
+            Fore.YELLOW}   ___\n  <   o>  PenguWarp OS\n  ( | )   v0.1.6 "Peach"\n  /___\\ \n'
     )
 
 
@@ -229,7 +230,8 @@ def create_wm_window(
 
     def move_window(event: tk.Event) -> None:
         win.geometry(
-            f"+{event.x_root - win._offsetx}+{event.y_root - win._offsety}"  # type: ignore[attr-defined]
+            f"+{event.x_root - win._offsetx}+{event.y_root -
+                                              win._offsety}"  # type: ignore[attr-defined]
         )
 
     title_bar.bind("<Button-1>", set_offset)
@@ -263,7 +265,8 @@ def gui_sysinfo(parent: tk.Misc) -> None:
     health_frame.pack(pady=10)
     tk.Frame(health_frame, bg=GRV_GREEN, height=20, width=180).place(x=0, y=0)
 
-    storage_size = os.path.getsize(SYSTEM_FILE) if os.path.exists(SYSTEM_FILE) else 0
+    storage_size = os.path.getsize(
+        SYSTEM_FILE) if os.path.exists(SYSTEM_FILE) else 0
     storage_kb = round(storage_size / 1024, 2)
     max_storage_kb = 512
     storage_percent = min((storage_kb / max_storage_kb) * 200, 200)
@@ -298,7 +301,6 @@ def gui_clock(parent: tk.Misc) -> None:
 
 
 def _safe_eval(expression: str) -> str:
-    """Safely evaluate a basic arithmetic expression without using eval()."""
     import ast
     import operator as op
 
@@ -442,7 +444,8 @@ def gui_pwdit(parent: tk.Misc, filename: str | None = None) -> None:
     current_file = [filename if filename else "new_file.txt"]
     is_modified = [False]
 
-    win, container = create_wm_window(parent, f"GPWDIT - {current_file[0]}", 700, 500)
+    win, container = create_wm_window(
+        parent, f"GPWDIT - {current_file[0]}", 700, 500)
 
     toolbar = tk.Frame(container, bg=GRV_BG1, relief="flat", bd=0)
     toolbar.pack(fill="x")
@@ -487,7 +490,8 @@ def gui_pwdit(parent: tk.Misc, filename: str | None = None) -> None:
     scrollbar.pack(side="right", fill="y")
     text_area.config(yscrollcommand=scrollbar.set)
 
-    status_bar = tk.Frame(container, bg=GRV_BG_HARD, height=25, relief="flat", bd=0)
+    status_bar = tk.Frame(container, bg=GRV_BG_HARD,
+                          height=25, relief="flat", bd=0)
     status_bar.pack(fill="x", side="bottom")
 
     status_left = tk.Label(
@@ -524,7 +528,8 @@ def gui_pwdit(parent: tk.Misc, filename: str | None = None) -> None:
         line_numbers.config(state="normal")
         line_numbers.delete("1.0", "end")
         line_count = int(text_area.index("end-1c").split(".")[0])
-        line_numbers.insert("1.0", "\n".join(str(i) for i in range(1, line_count + 1)))
+        line_numbers.insert("1.0", "\n".join(str(i)
+                            for i in range(1, line_count + 1)))
         line_numbers.config(state="disabled")
 
     def update_status_bar(event: tk.Event | None = None) -> None:
@@ -555,11 +560,13 @@ def gui_pwdit(parent: tk.Misc, filename: str | None = None) -> None:
                         quote_start = i
                     else:
                         text_area.tag_add(
-                            "string", f"{line_num}.{quote_start}", f"{line_num}.{i + 1}"
+                            "string", f"{line_num}.{
+                                quote_start}", f"{line_num}.{i + 1}"
                         )
                         in_quote = False
             if line.strip().startswith("#"):
-                text_area.tag_add("comment", f"{line_num}.0", f"{line_num}.end")
+                text_area.tag_add(
+                    "comment", f"{line_num}.0", f"{line_num}.end")
 
     def on_text_change(event: tk.Event | None = None) -> None:
         is_modified[0] = True
@@ -592,7 +599,8 @@ def gui_pwdit(parent: tk.Misc, filename: str | None = None) -> None:
         update_status_bar()
         win.after(
             1000,
-            lambda: save_btn.config(bg=GRV_ORANGE_DIM, fg=GRV_FG, text="💾 SAVE"),
+            lambda: save_btn.config(
+                bg=GRV_ORANGE_DIM, fg=GRV_FG, text="💾 SAVE"),
         )
 
     def open_file_dialog() -> None:
@@ -806,7 +814,8 @@ def gui_pwdit(parent: tk.Misc, filename: str | None = None) -> None:
     ).pack(side="right", padx=10)
 
     if filename:
-        path = f"{current_dir}/{filename}" if current_dir != "~" else f"~/{filename}"
+        path = f"{
+            current_dir}/{filename}" if current_dir != "~" else f"~/{filename}"
         load_file(path)
     else:
         update_line_numbers()
@@ -814,7 +823,8 @@ def gui_pwdit(parent: tk.Misc, filename: str | None = None) -> None:
 
 
 def gui_text_viewer(parent: tk.Misc, filename: str, text_content: str) -> None:
-    win, container = create_wm_window(parent, f"Text Viewer: {filename}", 450, 350)
+    win, container = create_wm_window(
+        parent, f"Leaf: {filename}", 450, 350)
     txt = tk.Text(
         container,
         bg=GRV_BG,
@@ -830,7 +840,7 @@ def gui_text_viewer(parent: tk.Misc, filename: str, text_content: str) -> None:
 
 
 def gui_file_browser(parent: tk.Misc) -> None:
-    win, container = create_wm_window(parent, "File Browser", 550, 400)
+    win, container = create_wm_window(parent, "Tree", 550, 400)
     curr_path = ["~"]
     hdr = tk.Frame(container, bg=GRV_BG1)
     hdr.pack(fill="x")
@@ -861,7 +871,8 @@ def gui_file_browser(parent: tk.Misc) -> None:
             lb.insert(tk.END, " .. [UP ONE LEVEL]")
             lb.itemconfig(tk.END, fg=GRV_ORANGE)
         for item in filesystem.get(curr_path[0], {}).get("contents", []):
-            full_p = f"{curr_path[0]}/{item}" if curr_path[0] != "~" else f"~/{item}"
+            full_p = f"{
+                curr_path[0]}/{item}" if curr_path[0] != "~" else f"~/{item}"
             icon = (
                 "📁"
                 if full_p in filesystem and filesystem[full_p]["type"] == "dir"
@@ -882,7 +893,8 @@ def gui_file_browser(parent: tk.Misc) -> None:
             refresh()
         else:
             name = txt.replace(" 📁 ", "").replace(" 📄 ", "").strip()
-            full_p = f"{curr_path[0]}/{name}" if curr_path[0] != "~" else f"~/{name}"
+            full_p = f"{
+                curr_path[0]}/{name}" if curr_path[0] != "~" else f"~/{name}"
             if full_p in filesystem:
                 if filesystem[full_p]["type"] == "dir":
                     curr_path[0] = full_p
@@ -987,6 +999,7 @@ def start_gui() -> None:
 
 # ----- SHELL COMMANDS -----
 
+
 def cmd_rmdir(args: list[str]) -> None:
     if not args:
         return
@@ -1000,6 +1013,7 @@ def cmd_rmdir(args: list[str]) -> None:
         save_system()
     else:
         print(f"rmdir: {args[0]}: no such directory")
+
 
 def cmd_help(args: list[str]) -> None:
     print(f'\n{Fore.YELLOW}PENGUWARP OS v0.1.6 "PEACH" COMMAND REFERENCE')
@@ -1136,7 +1150,8 @@ def cmd_pwdit(args: list[str]) -> None:
             if line == "" and lines and lines[-1] == "":
                 break
             lines.append(line)
-        filesystem[path] = {"type": "file", "content": "\n".join(lines).strip()}
+        filesystem[path] = {"type": "file",
+                            "content": "\n".join(lines).strip()}
         if args[0] not in filesystem[current_dir]["contents"]:
             filesystem[current_dir]["contents"].append(args[0])
         save_system()
@@ -1154,25 +1169,28 @@ def cmd_run(args: list[str]) -> None:
 
     lines = filesystem[path]["content"].split("\n")
     print(f"{Fore.YELLOW}Executing {args[0]}...")
-    
+
     errors = 0
     for i, script_line in enumerate(lines, 1):
         stripped = script_line.strip()
         if not stripped or stripped.startswith("#"):
             continue
-        
+
         cmd = stripped.split()[0]
         if cmd not in commands and cmd not in installed_packages:
-            print(f"{Fore.RED}run: {args[0]}: line {i}: unknown command '{cmd}'{Fore.WHITE}")
+            print(f"{Fore.RED}run: {args[0]}: line {
+                  i}: unknown command '{cmd}'{Fore.WHITE}")
             errors += 1
             continue
-        
+
         execute_command(stripped)
-    
+
     if errors:
-        print(f"{Fore.RED}run: {args[0]}: finished with {errors} error(s){Fore.WHITE}")
+        print(f"{Fore.RED}run: {args[0]}: finished with {
+              errors} error(s){Fore.WHITE}")
     else:
         print(f"{Fore.YELLOW}run: {args[0]}: done{Fore.WHITE}")
+
 
 def cmd_pkgmgr(args: list[str]) -> None:
     if repo is None:
@@ -1183,10 +1201,14 @@ def cmd_pkgmgr(args: list[str]) -> None:
     if not args:
         print(f"{Fore.YELLOW}=== PENGUWARP PACKAGE MANAGER ==={Fore.WHITE}")
         print("Usage:")
-        print(f"  {Fore.YELLOW}pkgmgr search{Fore.WHITE}           - Show all available packages")
-        print(f"  {Fore.YELLOW}pkgmgr list{Fore.WHITE}             - Show installed packages")
-        print(f"  {Fore.YELLOW}pkgmgr install <pkg>{Fore.WHITE}    - Install a package")
-        print(f"  {Fore.YELLOW}pkgmgr remove <pkg>{Fore.WHITE}     - Remove a package")
+        print(f"  {Fore.YELLOW}pkgmgr search{
+              Fore.WHITE}           - Show all available packages")
+        print(f"  {Fore.YELLOW}pkgmgr list{
+              Fore.WHITE}             - Show installed packages")
+        print(f"  {Fore.YELLOW}pkgmgr install <pkg>{
+              Fore.WHITE}    - Install a package")
+        print(f"  {Fore.YELLOW}pkgmgr remove <pkg>{
+              Fore.WHITE}     - Remove a package")
         return
 
     action = args[0]
@@ -1199,19 +1221,22 @@ def cmd_pkgmgr(args: list[str]) -> None:
                 if pkg_name in installed_packages
                 else ""
             )
-            print(f"{Fore.YELLOW}{pkg_name:<12}{Fore.WHITE} - {pkg_info['description']} {installed_tag}")
+            print(f"{Fore.YELLOW}{pkg_name:<12}{
+                  Fore.WHITE} - {pkg_info['description']} {installed_tag}")
         print()
 
     elif action == "list":
         if not installed_packages:
             print(f"{Fore.YELLOW}No packages installed yet!{Fore.WHITE}")
-            print(f"Use {Fore.YELLOW}pkgmgr search{Fore.WHITE} to see available packages")
+            print(f"Use {Fore.YELLOW}pkgmgr search{
+                  Fore.WHITE} to see available packages")
         else:
             print(f"\n{Fore.YELLOW}=== INSTALLED PACKAGES ==={Fore.WHITE}")
             for pkg in installed_packages:
                 if pkg in repo.AVAILABLE_PACKAGES:
                     info = repo.AVAILABLE_PACKAGES[pkg]
-                    print(f"{Fore.YELLOW}{pkg:<12}{Fore.WHITE} - {info['description']}")
+                    print(f"{Fore.YELLOW}{pkg:<12}{
+                          Fore.WHITE} - {info['description']}")
             print()
 
     elif action == "install":
@@ -1220,16 +1245,20 @@ def cmd_pkgmgr(args: list[str]) -> None:
             return
         pkg_name = args[1]
         if pkg_name not in repo.AVAILABLE_PACKAGES:
-            print(f"{Fore.RED}Error: Package '{pkg_name}' not found{Fore.WHITE}")
+            print(f"{Fore.RED}Error: Package '{
+                  pkg_name}' not found{Fore.WHITE}")
             return
         if pkg_name in installed_packages:
-            print(f"{Fore.YELLOW}Package '{pkg_name}' is already installed{Fore.WHITE}")
+            print(f"{Fore.YELLOW}Package '{
+                  pkg_name}' is already installed{Fore.WHITE}")
             return
         installed_packages.append(pkg_name)
         save_system()
         pkg_info = repo.AVAILABLE_PACKAGES[pkg_name]
-        print(f"{Fore.GREEN}✓{Fore.WHITE} Successfully installed {Fore.YELLOW}{pkg_info['name']}{Fore.WHITE}")
-        print(f"  You can now run it by typing: {Fore.YELLOW}{pkg_name}{Fore.WHITE}")
+        print(f"{Fore.GREEN}✓{Fore.WHITE} Successfully installed {
+              Fore.YELLOW}{pkg_info['name']}{Fore.WHITE}")
+        print(f"  You can now run it by typing: {
+              Fore.YELLOW}{pkg_name}{Fore.WHITE}")
 
     elif action == "remove":
         if len(args) < 2:
@@ -1237,11 +1266,13 @@ def cmd_pkgmgr(args: list[str]) -> None:
             return
         pkg_name = args[1]
         if pkg_name not in installed_packages:
-            print(f"{Fore.YELLOW}Package '{pkg_name}' is not installed{Fore.WHITE}")
+            print(f"{Fore.YELLOW}Package '{
+                  pkg_name}' is not installed{Fore.WHITE}")
             return
         installed_packages.remove(pkg_name)
         save_system()
-        print(f"{Fore.GREEN}✓{Fore.WHITE} Successfully removed {Fore.YELLOW}{pkg_name}{Fore.WHITE}")
+        print(f"{Fore.GREEN}✓{Fore.WHITE} Successfully removed {
+              Fore.YELLOW}{pkg_name}{Fore.WHITE}")
 
     else:
         print(f"{Fore.RED}Unknown action: {action}{Fore.WHITE}")
@@ -1305,7 +1336,7 @@ def setup_readline() -> None:
         if "/" in prefix:
             slash_idx = prefix.rfind("/")
             base_dir = prefix[:slash_idx] or "~"
-            prefix = prefix[slash_idx + 1 :]
+            prefix = prefix[slash_idx + 1:]
 
         contents = filesystem.get(base_dir, {}).get("contents", [])
         matches = [item for item in contents if item.startswith(prefix)]
@@ -1344,7 +1375,8 @@ def execute_command(line: str) -> None:
                     {"__name__": "__main__", "__file__": pkg_path},
                 )
             except FileNotFoundError:
-                print(f"{Fore.RED}Error: Package file not found: {pkg_file}{Fore.WHITE}")
+                print(f"{Fore.RED}Error: Package file not found: {
+                      pkg_file}{Fore.WHITE}")
             except Exception as e:
                 print(f"{Fore.RED}Error running package: {e}{Fore.WHITE}")
             load_system()
@@ -1363,7 +1395,8 @@ if __name__ == "__main__":
     while True:
         try:
             line = input(
-                f"{Fore.YELLOW}{user}@{hostname}{Fore.WHITE}:{Fore.YELLOW}{current_dir}{Fore.WHITE}$ "
+                f"{Fore.YELLOW}{
+                    user}@{hostname}{Fore.WHITE}:{Fore.YELLOW}{current_dir}{Fore.WHITE}$ "
             ).strip()
             execute_command(line)
         except KeyboardInterrupt:

@@ -34,7 +34,7 @@ Once you get comfortable with how terminals work, making the jump to real Linux 
 
 ## Getting Started
 
-**Requirements:** Python 3.10+, `colorama`, `dearpygui` (optional, for GUI)
+**Requirements:** Python 3.10+, `colorama`
 
 ```bash
 git clone https://github.com/theidioticdev/penguwarpos                   # for stable release
@@ -42,11 +42,9 @@ git clone -b testing https://github.com/theidioticdev/penguwarpos        # for t
 cd penguwarpos
 pip install colorama
 pip install curses
-pip install dearpygui
-python kernel.py
+python3 kernel.py
 ```
 
-On first boot, a curses TUI installer walks you through setting up your hostname and user. After that, you're dropped straight into PWShell.
 
 ---
 
@@ -54,6 +52,8 @@ On first boot, a curses TUI installer walks you through setting up your hostname
 
 PenguWarp has a real permission hierarchy:
 
+
+***APPLIES TO THE TESTING RELEASE ONLY***
 - **root** — exists but is inaccessible. Its password is randomly generated at first boot and never exposed.
 - **first user** — automatically becomes the sudoer (admin).
 - **any other user** — standard user. Must use `adminrun` to run privileged commands.
@@ -73,15 +73,15 @@ PenguWarp has a real permission hierarchy:
 
 ---
 
-## Package Manager — PWPM
+## Package Manager — PKGMGR
 
 PenguWarp has its own package manager. Install, remove, search, and list packages straight from PWShell.
 
 ```bash
-pwpm search        # browse available packages
-pwpm install snake # install a package
-pwpm remove snake  # remove a package
-pwpm list          # list installed packages
+pkgmgr search        # browse available packages
+pkgmgr install snake # install a package
+pkgmgr remove snake  # remove a package
+pkgmgr list          # list installed packages
 ```
 
 ### Available packages
@@ -92,23 +92,11 @@ pwpm list          # list installed packages
 | `cowsay`    | Make a cow say things                              |
 | `matrix`    | Matrix rain effect in terminal                     |
 | `todo`      | CLI todo list manager                              |
-| `dungeon`   | TUI dungeon crawler with procedural map generation |
-| `tpwdit`    | TUI text editor (PenguWarp eDITor)                 |
-| `dashwarp`  | TUI dashboard with clock, todos, and filesystem browser |
-| `penguwin`  | PenguWin Desktop Environment          |
-| `pwlogin`   | PenguWin graphical login manager      |
-
 ---
 
 ## PenguWin Desktop Environment
-
-Install `penguwin` via PWPM to get a full graphical desktop environment built with **Dear PyGui**, themed in Gruvbox. On next boot, the graphical **LightWarp Login Manager** launches automatically — authenticate and you're in the DE.
-
-```bash
-pwpm install penguwin
-pwpm install pwlogin
-poweroff  # reboot to trigger the GUI login
-```
+This stable release comes with a desktop environment built with TkInter named PenguWin
+the testing release has the new version of PenguWin which uses Dear PyGUI now
 
 ---
 
@@ -120,8 +108,7 @@ PenguWarp ships with a built-in line editor:
 pwdit filename.txt
 ```
 
-For a richer TUI editing experience, install `tpwdit` via PWPM.
-and for a graphical, windows-like editing experience, use GPWDIT via PenguWin
+for a graphical, windows-like editing experience, use GPWDIT via PenguWin
 ---
 
 ## Other Features
@@ -154,7 +141,6 @@ Because `cat`, `ls`, `touch`, and `rm` are terrible names for commands and every
 
 - `colorama` — terminal colors
 - `curses` — TUI installer, dashwarp, tpwdit, dungeon (stdlib on Linux/macOS)
-- `dearpygui` — PenguWin DE and graphical login manager (optional)
 
 ---
 
