@@ -1,0 +1,67 @@
+{
+  "users": [
+    {
+      "username": "root",
+      "password": "b8a7730e14b50c615e0e05c215d7a08cbf49be8810563bb1f88ddb3fb945e7fa",
+      "is_admin": true,
+      "home": "~"
+    },
+    {
+      "username": "user",
+      "password": "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb",
+      "is_admin": true,
+      "home": "~/usr/user"
+    }
+  ],
+  "system": {
+    "username": "user",
+    "hostname": "grape-fruit",
+    "first_boot": false
+  },
+  "filesystem": {
+    "~": {
+      "type": "dir",
+      "contents": [
+        "sys",
+        "usr",
+        "pkgs",
+        "tmp"
+      ]
+    },
+    "~/sys": {
+      "type": "dir",
+      "contents": [
+        "version"
+      ]
+    },
+    "~/usr": {
+      "type": "dir",
+      "contents": [
+        "user"
+      ]
+    },
+    "~/pkgs": {
+      "type": "dir",
+      "contents": []
+    },
+    "~/tmp": {
+      "type": "dir",
+      "contents": []
+    },
+    "~/sys/version": {
+      "type": "file",
+      "content": "PenguWarp OS v0.2.0 \"Grape Fruit\" Stable\nKernel: v0.2.0-grape-fruit_x86_64"
+    },
+    "~/usr/user": {
+      "type": "dir",
+      "contents": [
+        "welcome.txt"
+      ]
+    },
+    "~/usr/user/welcome.txt": {
+      "type": "file",
+      "content": "Welcome to PenguWarp OS \"Grape Fruit\", user!\n\nYour home directory is ~/usr/user.\nType 'help' to see available commands.\nUse 'pwpm search' to browse installable packages.\n\nBuilt with Python."
+    }
+  },
+  "installed_packages": []
+}

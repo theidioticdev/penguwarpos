@@ -38,7 +38,7 @@ def _resolve(name: str) -> str:
 # ── Commands ─────────────────────────────────────────────────────────────────
 
 def cmd_help(args: list[str]) -> None:
-    print(f'\n{Fore.YELLOW}PENGUWARP OS v0.1.8 "LEMON" COMMAND REFERENCE')
+    print(f'\n{Fore.YELLOW}PENGUWARP OS v0.2.0 "GRAPE FRUIT" COMMAND REFERENCE')
     print(f"{Fore.WHITE}" + "-" * 60)
     for c, d in COMMAND_DESC.items():
         print(f"{Fore.YELLOW}{c:<12}{Fore.WHITE} : {d}")
@@ -183,7 +183,7 @@ def cmd_whoami(args: list[str]) -> None:
 
 
 def cmd_uname(args: list[str]) -> None:
-    print("v0.1.8-lemon-dev_x86-64")
+    print("v0.2.0-grape-fruit_x86-64")
 
 
 def cmd_clear(args: list[str]) -> None:
@@ -203,8 +203,8 @@ def cmd_pyufetch(args: list[str]) -> None:
     info = [
         f"{Fore.YELLOW}{S.user}@{S.hostname}",
         f"{Fore.WHITE}------------------",
-        f'{Fore.YELLOW}OS: {Fore.WHITE}PenguWarp v0.1.8 "Lemon"',
-        f"{Fore.YELLOW}Kernel: {Fore.WHITE}v0.1.8-lemon-dev_x86-64",
+        f'{Fore.YELLOW}OS: {Fore.WHITE}PenguWarp v0.2.0 "Grape Fruit"',
+        f"{Fore.YELLOW}Kernel: {Fore.WHITE}v0.2.0-grape-fruit_x86-64",
         f"{Fore.YELLOW}Uptime: {Fore.WHITE}{uptime}s",
         f"{Fore.YELLOW}Shell: {Fore.WHITE}PWShell",
         f"{Fore.YELLOW}Packages: {Fore.WHITE}{3 + len(S.installed_packages)}",
@@ -338,15 +338,9 @@ def cmd_pwpm(args: list[str]) -> None:
         print(f"{Fore.RED}pwpm: unknown action '{action}'{Fore.WHITE}")
 
 
-def cmd_penguwin(args: list[str]) -> None:
-    if "penguwin" not in S.installed_packages:
-        print(f"{Fore.RED}penguwin: not installed — run: {Fore.YELLOW}pwpm install penguwin{Fore.WHITE}")
-        return
-    _run_package("penguwin", args)
-
 
 def cmd_poweroff(args: list[str]) -> None:
-    print(f"{Fore.RED}Shutting down PenguWarp Lemon...")
+    print(f"{Fore.RED}Shutting down PenguWarp Grape Fruit...")
     save_system()
     time.sleep(1)
     sys.exit(0)
@@ -356,11 +350,24 @@ def cmd_usercn(args: list[str]) -> None:
     if not _require_args(args, "provide a new username"):
         return
     new_name = args[0]
+    old_home = S.user_home(S.user)
+    new_home = S.user_home(new_name)
     # Sync the users_list entry so username doesn't go out of sync on reboot
     for u in S.users_list:
         if u["username"] == S.user:
             u["username"] = new_name
+            u["home"] = new_home
             break
+    # rename the home directory key in the filesystem
+    if old_home in S.filesystem:
+        S.filesystem[new_home] = S.filesystem.pop(old_home)
+    # update ~/usr contents list
+    usr_contents = S.filesystem.get("~/usr", {}).get("contents", [])
+    if S.user in usr_contents:
+        usr_contents[usr_contents.index(S.user)] = new_name
+    # fix current_dir if user was inside their old home
+    if S.current_dir.startswith(old_home):
+        S.current_dir = S.current_dir.replace(old_home, new_home, 1)
     S.user = new_name
     save_system()
     print(f"{Fore.YELLOW}usercn: username changed to '{S.user}'{Fore.WHITE}")
@@ -531,8 +538,6 @@ def execute_command(line: str) -> None:
 
     if cmd_name in COMMANDS:
         COMMANDS[cmd_name](args)  # type: ignore[operator]
-    elif cmd_name == "penguwin":
-        cmd_penguwin(args)
     elif cmd_name in S.installed_packages and repo is not None:
         _run_package(cmd_name, args)
     else:

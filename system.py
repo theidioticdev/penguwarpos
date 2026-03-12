@@ -11,32 +11,31 @@ from colorama import Fore
 # ── Runtime state ────────────────────────────────────────────────────────────
 start_time: float = time.time()
 
-user:               str  = "liveuser"
-hostname:           str  = "livesys"
-current_dir:        str  = "~"
+user:               str = "liveuser"
+hostname:           str = "livesys"
+current_dir:        str = "~"
 filesystem:         dict = {}
 installed_packages: list = []
 users_list:         list = []
 _adminrun_active:   bool = False
 
 # ── Paths ────────────────────────────────────────────────────────────────────
-SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SYSTEM_FILE = os.path.join(SCRIPT_DIR, "penguwarp_system.json")
 
-# ── Gruvbox palette (RGBA tuples for DearPyGui) ──────────────────────────────
-GRV_BG         = (40,  40,  40,  255)
-GRV_BG1        = (60,  56,  54,  255)
-GRV_BG2        = (80,  73,  69,  255)
-GRV_BG_HARD    = (29,  32,  33,  255)
-GRV_FG         = (235, 219, 178, 255)
-GRV_YELLOW     = (250, 189, 47,  255)
+GRV_BG = (40,  40,  40,  255)
+GRV_BG1 = (60,  56,  54,  255)
+GRV_BG2 = (80,  73,  69,  255)
+GRV_BG_HARD = (29,  32,  33,  255)
+GRV_FG = (235, 219, 178, 255)
+GRV_YELLOW = (250, 189, 47,  255)
 GRV_YELLOW_DIM = (215, 153, 33,  255)
-GRV_ORANGE     = (254, 128, 25,  255)
+GRV_ORANGE = (254, 128, 25,  255)
 GRV_ORANGE_DIM = (214, 93,  14,  255)
-GRV_RED        = (251, 73,  52,  255)
-GRV_GREEN      = (184, 187, 38,  255)
-GRV_AQUA       = (142, 192, 124, 255)
-GRV_GRAY       = (146, 131, 116, 255)
+GRV_RED = (251, 73,  52,  255)
+GRV_GREEN = (184, 187, 38,  255)
+GRV_AQUA = (142, 192, 124, 255)
+GRV_GRAY = (146, 131, 116, 255)
 
 # ── Command descriptions (used by help + tab completion) ─────────────────────
 COMMAND_DESC: dict[str, str] = {
@@ -55,7 +54,6 @@ COMMAND_DESC: dict[str, str] = {
     "pwdit":    "Open the PenguWarp line editor for files",
     "pyufetch": "Show system hardware and OS branding",
     "clear":    "Wipe the terminal screen",
-    "penguwin": "Launch PenguWin DE (install via: pwpm install penguwin)",
     "pwpm":     "Manage packages (install/remove/list/search)",
     "poweroff": "Shutdown the system and save all changes",
     "rmdir":    "Remove an empty directory",
@@ -70,6 +68,7 @@ COMMAND_DESC: dict[str, str] = {
 }
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
+
 
 def resolve_path(path: str) -> str:
     """
@@ -149,12 +148,14 @@ def migrate_system(data: dict) -> dict:
         if "password" not in u:
             u["password"] = hash_pw("admin")
             print(
-                f"{Fore.YELLOW}migrate: user '{u['username']}' had no password "
+                f"{Fore.YELLOW}migrate: user '{
+                    u['username']}' had no password "
                 f"— set to 'admin'. Change it with passwd.{Fore.WHITE}"
             )
         # add home field if missing (pre-new-layout saves)
         if "home" not in u:
-            u["home"] = "~" if u["username"] == "root" else f"~/usr/{u['username']}"
+            u["home"] = "~" if u["username"] == "root" else f"~/usr/{
+                u['username']}"
     return data
 
 
@@ -174,13 +175,13 @@ def load_system() -> bool:
     try:
         with open(SYSTEM_FILE, "r", encoding="utf-8") as f:
             data = migrate_system(json.load(f))
-        user               = data["system"]["username"]
-        hostname           = data["system"]["hostname"]
-        filesystem         = data["filesystem"]
+        user = data["system"]["username"]
+        hostname = data["system"]["hostname"]
+        filesystem = data["filesystem"]
         installed_packages = data.get("installed_packages", [])
-        users_list         = data.get("users", [])
+        users_list = data.get("users", [])
         # restore current_dir to user's home on login
-        current_dir        = user_home(user)
+        current_dir = user_home(user)
         return data["system"]["first_boot"]
     except (json.JSONDecodeError, KeyError, OSError):
         return True

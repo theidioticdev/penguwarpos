@@ -17,7 +17,7 @@ PENGUIN = [
     r"   /___\   ",
 ]
 
-TITLE   = 'PenguWarp OS  v0.1.8 "Lemon"'
+TITLE   = 'PenguWarp OS  v0.2.0 "Grape Fruit"'
 SUBTITLE = "First-Boot Setup"
 
 

@@ -3,6 +3,7 @@ import time
 import heapq
 from colorama import Fore, Style
 
+
 def run():
     print(f"{Fore.GREEN}=== SNAKE GAME (AUTO-PLAY DEMO) ==={Style.RESET_ALL}")
     print("Watch the snake eat food automatically!")
@@ -18,8 +19,9 @@ def run():
 
     def draw():
         print("\033[H\033[J")
-        print(f"{Fore.CYAN}Score: {score} | High Score: {high_score} | Auto-playing...{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}+" + "-" * width + "+{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}Score: {score} | High Score: {
+              high_score} | Auto-playing...{Style.RESET_ALL}")
+        print(f"{Fore.WHITE}+" + "-" * width + f"+{Style.RESET_ALL}")
         for y in range(height):
             print(f"{Fore.WHITE}|{Style.RESET_ALL}", end="")
             for x in range(width):
@@ -51,7 +53,8 @@ def run():
                 next_pos = path[1]
             else:
                 # A* failed - survival mode: pick safest direction
-                next_pos = survival_move(head, direction, snake_set, width, height)
+                next_pos = survival_move(
+                    head, direction, snake_set, width, height)
 
             if next_pos is None:
                 # truly cooked, just go forward and die with dignity
@@ -62,10 +65,14 @@ def run():
 
             direction = (next_pos[0] - head[0], next_pos[1] - head[1])
             # fix wrap-around direction weirdness
-            if direction[0] > 1: direction = (-1, direction[1])
-            if direction[0] < -1: direction = (1, direction[1])
-            if direction[1] > 1: direction = (direction[0], -1)
-            if direction[1] < -1: direction = (direction[0], 1)
+            if direction[0] > 1:
+                direction = (-1, direction[1])
+            if direction[0] < -1:
+                direction = (1, direction[1])
+            if direction[1] > 1:
+                direction = (direction[0], -1)
+            if direction[1] < -1:
+                direction = (direction[0], 1)
 
             new_head = (
                 (head[0] + direction[0]) % height,
@@ -76,7 +83,8 @@ def run():
             if new_head in snake_set:
                 high_score = max(high_score, score)
                 print(f"\n{Fore.RED}GAME OVER! Hit itself! 💀{Style.RESET_ALL}")
-                print(f"{Fore.YELLOW}Score: {score} | High Score: {high_score}{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}Score: {score} | High Score: {
+                      high_score}{Style.RESET_ALL}")
                 time.sleep(1.5)
                 # restart
                 snake = [(5, 5), (5, 4), (5, 3)]

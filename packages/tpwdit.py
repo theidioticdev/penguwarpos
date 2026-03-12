@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-"""
-tpwdit - TUI PenguWarp eDITor
-A vim-inspired terminal editor for PenguWarp OS v0.1.6 "Peach"
-
-Modes:
-  NORMAL  - Navigate with hjkl, enter INSERT with i/a/o, COMMAND with :
-  INSERT  - Type text, Esc to return to NORMAL
-  COMMAND - :w (save), :q (quit), :wq (save+quit), :q! (force quit)
-"""
-
-=======
->>>>>>> origin/testing
 import curses
 import json
 import os
@@ -18,29 +5,26 @@ import sys
 import time
 
 # ── Color pair IDs ───────────────────────────────────────────────────────────
-PAIR_NORMAL_BAR  = 1   # status bar in NORMAL mode
-PAIR_INSERT_BAR  = 2   # status bar in INSERT mode
+PAIR_NORMAL_BAR = 1   # status bar in NORMAL mode
+PAIR_INSERT_BAR = 2   # status bar in INSERT mode
 PAIR_COMMAND_BAR = 3   # status bar in COMMAND mode
-PAIR_LINE_NUM    = 4   # line numbers / tilde rows
-PAIR_TEXT        = 5   # normal text
+PAIR_LINE_NUM = 4   # line numbers / tilde rows
+PAIR_TEXT = 5   # normal text
 PAIR_CMD_KEYWORD = 6   # .pwe syntax: commands
-PAIR_CMD_STRING  = 7   # .pwe syntax: strings
+PAIR_CMD_STRING = 7   # .pwe syntax: strings
 PAIR_CMD_COMMENT = 8   # .pwe syntax: comments
-PAIR_MODIFIED    = 9   # messages / [+] indicator
+PAIR_MODIFIED = 9   # messages / [+] indicator
 PAIR_CURSOR_LINE = 10  # current line highlight
 
-SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 # tpwdit always lives in packages/ — system file is always one level up next to the kernel
-SYSTEM_FILE = os.path.join(os.path.dirname(SCRIPT_DIR), "penguwarp_system.json")
+SYSTEM_FILE = os.path.join(os.path.dirname(
+    SCRIPT_DIR), "penguwarp_system.json")
 
 PWE_COMMANDS = {
     "help", "list", "read", "cd", "whereami", "mkdir", "mkfile", "delete",
     "rmdir", "echo", "run", "uname", "whoami", "pwdit", "tpwdit", "pyufetch",
-<<<<<<< HEAD
-    "clear", "startx", "poweroff", "about", "pkgmgr",
-=======
-    "clear", "startx", "poweroff", "about", "pkgmgr","usercn","hostcn",
->>>>>>> origin/testing
+    "clear", "startx", "poweroff", "about", "pkgmgr", "usercn", "hostcn",
 }
 
 
@@ -68,21 +52,13 @@ def init_colors() -> None:
     curses.use_default_colors()
 
     # Gruvbox-approximate 256-color values
-    BG     = 235   # #262626
-<<<<<<< HEAD
-    FG     = 223   # close to ebdbb2
-=======
-    FG     = 223   # close to #ebdbb2
->>>>>>> origin/testing
+    BG = 235   # #262626
+    FG = 223   # close to #ebdbb2
     YELLOW = 214   # #ffaf00
-    GREEN  = 142   # #afaf00
-    AQUA   = 108   # #87af87
-    GRAY   = 102   # #878787
-<<<<<<< HEAD
-    BG1    = 237   # #3a3a3a (cursor line bg)
-=======
-    BG1    = 237   # #3a3a3a 
->>>>>>> origin/testing
+    GREEN = 142   # #afaf00
+    AQUA = 108   # #87af87
+    GRAY = 102   # #878787
+    BG1 = 237   # #3a3a3a
     ORANGE = 208   # #ff8700
 
     curses.init_pair(PAIR_NORMAL_BAR,  BG,    YELLOW)
@@ -131,7 +107,7 @@ def highlight_line(win, y: int, x_off: int, line: str,
     col = x_off
     tokens = line.split('"')
 
-    pre   = tokens[0] if tokens else line
+    pre = tokens[0] if tokens else line
     words = pre.split()
 
     # First word → keyword?
@@ -178,54 +154,55 @@ def highlight_line(win, y: int, x_off: int, line: str,
 # ── Editor ───────────────────────────────────────────────────────────────────
 
 class Editor:
-    NORMAL  = "NORMAL"
-    INSERT  = "INSERT"
+    NORMAL = "NORMAL"
+    INSERT = "INSERT"
     COMMAND = "COMMAND"
 
     def __init__(self, pw_path: str) -> None:
-<<<<<<< HEAD
-        # normalize bare filenames → ~/filename so they match the JSON keys PW uses
-=======
->>>>>>> origin/testing
+        data = load_system()
+        username = data.get("system", {}).get("username", "user")
+        home = f"~/usr/{username}"
+
+        if pw_path == "~":
+            pw_path = home
+        elif pw_path.startswith("~/"):
+            pw_path = pw_path.replace("~", home, 1)
+        elif "/" not in pw_path:
+            pw_path = f"{home}/{pw_path}"
         if not pw_path.startswith("~") and "/" not in pw_path:
             pw_path = f"~/{pw_path}"
-        self.pw_path  = pw_path
+        self.pw_path = pw_path
         self.filename = pw_path.split("/")[-1]
-        self.is_pwe   = self.filename.endswith(".pwe")
+        self.is_pwe = self.filename.endswith(".pwe")
 
-        self.mode       = self.NORMAL
+        self.mode = self.NORMAL
         self.lines: list[str] = [""]
-<<<<<<< HEAD
-        self.crow       = 0   # cursor row
-        self.ccol       = 0   # cursor col
-=======
-        self.crow       = 0   
-        self.ccol       = 0   
->>>>>>> origin/testing
+        self.crow = 0
+        self.ccol = 0
         self.scroll_top = 0
-        self.modified   = False
-        self.cmd_buf    = ""
-        self.msg        = ""
-        self.msg_ts     = 0.0
-        self.running    = True
+        self.modified = False
+        self.cmd_buf = ""
+        self.msg = ""
+        self.msg_ts = 0.0
+        self.running = True
 
     # ── I/O ──────────────────────────────────────────────────────────────────
 
     def load(self) -> None:
         data = load_system()
-        fs   = data.get("filesystem", {})
+        fs = data.get("filesystem", {})
         entry = fs.get(self.pw_path)
         if entry and entry.get("type") == "file":
-            content    = entry.get("content", "")
+            content = entry.get("content", "")
             self.lines = content.split("\n") if content else [""]
         else:
             self.lines = [""]
 
     def save(self) -> bool:
         data = load_system()
-        fs   = data.get("filesystem", {})
+        fs = data.get("filesystem", {})
 
-        parts   = self.pw_path.rsplit("/", 1)
+        parts = self.pw_path.rsplit("/", 1)
         par_key = parts[0] if len(parts) > 1 else "~"
 
         if par_key not in fs:
@@ -245,7 +222,7 @@ class Editor:
     # ── Helpers ──────────────────────────────────────────────────────────────
 
     def flash(self, msg: str) -> None:
-        self.msg    = msg
+        self.msg = msg
         self.msg_ts = time.time()
 
     def vis_rows(self, h: int) -> int:
@@ -253,7 +230,7 @@ class Editor:
 
     def clamp(self) -> None:
         self.crow = max(0, min(self.crow, len(self.lines) - 1))
-        line_len  = len(self.lines[self.crow])
+        line_len = len(self.lines[self.crow])
         if self.mode == self.NORMAL:
             self.ccol = max(0, min(self.ccol, max(0, line_len - 1)))
         else:
@@ -270,13 +247,9 @@ class Editor:
 
     def draw(self, scr) -> None:
         scr.erase()
-        h, w   = scr.getmaxyx()
-        vis    = self.vis_rows(h)
-<<<<<<< HEAD
-        lnum_w = len(str(len(self.lines))) + 2  # gutter width
-=======
-        lnum_w = len(str(len(self.lines))) + 2  
->>>>>>> origin/testing
+        h, w = scr.getmaxyx()
+        vis = self.vis_rows(h)
+        lnum_w = len(str(len(self.lines))) + 2
 
         # Text rows
         for sr in range(vis):
@@ -289,8 +262,9 @@ class Editor:
                 continue
 
             is_cur = (fr == self.crow)
-            lnum   = f"{fr + 1:>{lnum_w - 1}} "
-            lattr  = curses.color_pair(PAIR_CURSOR_LINE if is_cur else PAIR_LINE_NUM)
+            lnum = f"{fr + 1:>{lnum_w - 1}} "
+            lattr = curses.color_pair(
+                PAIR_CURSOR_LINE if is_cur else PAIR_LINE_NUM)
             try:
                 scr.addstr(sr, 0, lnum, lattr)
             except curses.error:
@@ -299,22 +273,21 @@ class Editor:
             highlight_line(scr, sr, lnum_w, self.lines[fr],
                            self.is_pwe, is_cur, w)
 
-<<<<<<< HEAD
-        # Status bar
-=======
->>>>>>> origin/testing
         bar_row = h - 2
         if self.mode == self.NORMAL:
-            bar_pair, mode_tag = curses.color_pair(PAIR_NORMAL_BAR),  " NORMAL "
+            bar_pair, mode_tag = curses.color_pair(
+                PAIR_NORMAL_BAR),  " NORMAL "
         elif self.mode == self.INSERT:
-            bar_pair, mode_tag = curses.color_pair(PAIR_INSERT_BAR),  " INSERT "
+            bar_pair, mode_tag = curses.color_pair(
+                PAIR_INSERT_BAR),  " INSERT "
         else:
-            bar_pair, mode_tag = curses.color_pair(PAIR_COMMAND_BAR), " COMMAND "
+            bar_pair, mode_tag = curses.color_pair(
+                PAIR_COMMAND_BAR), " COMMAND "
 
-        flag     = " [+]" if self.modified else ""
-        fname    = f" {self.filename}{flag} "
-        pos      = f" {self.crow + 1}:{self.ccol + 1} "
-        pad      = " " * max(0, w - len(mode_tag) - len(fname) - len(pos))
+        flag = " [+]" if self.modified else ""
+        fname = f" {self.filename}{flag} "
+        pos = f" {self.crow + 1}:{self.ccol + 1} "
+        pad = " " * max(0, w - len(mode_tag) - len(fname) - len(pos))
         bar_text = (mode_tag + fname + pad + pos)[:w]
         try:
             scr.addstr(bar_row, 0, bar_text, bar_pair | curses.A_BOLD)
@@ -347,10 +320,6 @@ class Editor:
             except curses.error:
                 pass
 
-<<<<<<< HEAD
-        # Cursor position
-=======
->>>>>>> origin/testing
         if self.mode == self.COMMAND:
             try:
                 scr.move(msg_row, min(len(self.cmd_buf) + 1, w - 1))
@@ -373,31 +342,50 @@ class Editor:
         ch = chr(key) if 0 < key < 256 else ""
 
         # ─ Movement ─
-        if   ch == "h" or key == curses.KEY_LEFT:  self.ccol = max(0, self.ccol - 1)
-        elif ch == "l" or key == curses.KEY_RIGHT:  self.ccol += 1
-        elif ch == "k" or key == curses.KEY_UP:     self.crow = max(0, self.crow - 1)
-        elif ch == "j" or key == curses.KEY_DOWN:   self.crow = min(len(self.lines) - 1, self.crow + 1)
-        elif ch == "0" or key == curses.KEY_HOME:   self.ccol = 0
-        elif ch == "$" or key == curses.KEY_END:    self.ccol = max(0, len(self.lines[self.crow]) - 1)
-        elif ch == "g":  self.crow = 0;  self.ccol = 0
-        elif ch == "G":  self.crow = len(self.lines) - 1;  self.ccol = 0
-        elif key == curses.KEY_PPAGE: self.crow = max(0, self.crow - 20)
-        elif key == curses.KEY_NPAGE: self.crow = min(len(self.lines) - 1, self.crow + 20)
+        if ch == "h" or key == curses.KEY_LEFT:
+            self.ccol = max(0, self.ccol - 1)
+        elif ch == "l" or key == curses.KEY_RIGHT:
+            self.ccol += 1
+        elif ch == "k" or key == curses.KEY_UP:
+            self.crow = max(0, self.crow - 1)
+        elif ch == "j" or key == curses.KEY_DOWN:
+            self.crow = min(len(self.lines) - 1, self.crow + 1)
+        elif ch == "0" or key == curses.KEY_HOME:
+            self.ccol = 0
+        elif ch == "$" or key == curses.KEY_END:
+            self.ccol = max(0, len(self.lines[self.crow]) - 1)
+        elif ch == "g":
+            self.crow = 0
+            self.ccol = 0
+        elif ch == "G":
+            self.crow = len(self.lines) - 1
+            self.ccol = 0
+        elif key == curses.KEY_PPAGE:
+            self.crow = max(0, self.crow - 20)
+        elif key == curses.KEY_NPAGE:
+            self.crow = min(len(self.lines) - 1, self.crow + 20)
 
         # Word hop (basic)
         elif ch == "w":
-            line = self.lines[self.crow]; p = self.ccol + 1
-            while p < len(line) and line[p] != " ": p += 1
-            while p < len(line) and line[p] == " ": p += 1
+            line = self.lines[self.crow]
+            p = self.ccol + 1
+            while p < len(line) and line[p] != " ":
+                p += 1
+            while p < len(line) and line[p] == " ":
+                p += 1
             self.ccol = min(p, max(0, len(line) - 1))
         elif ch == "b":
-            line = self.lines[self.crow]; p = self.ccol - 1
-            while p > 0 and line[p] == " ": p -= 1
-            while p > 0 and line[p - 1] != " ": p -= 1
+            line = self.lines[self.crow]
+            p = self.ccol - 1
+            while p > 0 and line[p] == " ":
+                p -= 1
+            while p > 0 and line[p - 1] != " ":
+                p -= 1
             self.ccol = max(0, p)
 
         # ─ Enter INSERT ─
-        elif ch == "i": self.mode = self.INSERT
+        elif ch == "i":
+            self.mode = self.INSERT
         elif ch == "a":
             self.ccol = min(self.ccol + 1, len(self.lines[self.crow]))
             self.mode = self.INSERT
@@ -406,15 +394,20 @@ class Editor:
             self.mode = self.INSERT
         elif ch == "o":
             self.lines.insert(self.crow + 1, "")
-            self.crow += 1; self.ccol = 0
-            self.modified = True; self.mode = self.INSERT
+            self.crow += 1
+            self.ccol = 0
+            self.modified = True
+            self.mode = self.INSERT
         elif ch == "O":
             self.lines.insert(self.crow, "")
             self.ccol = 0
-            self.modified = True; self.mode = self.INSERT
+            self.modified = True
+            self.mode = self.INSERT
 
         # ─ Enter COMMAND ─
-        elif ch == ":": self.mode = self.COMMAND; self.cmd_buf = ""
+        elif ch == ":":
+            self.mode = self.COMMAND
+            self.cmd_buf = ""
 
         # ─ Delete char (x) ─
         elif ch == "x":
@@ -458,15 +451,24 @@ class Editor:
             ln = self.lines[self.crow]
             self.lines[self.crow] = ln[:self.ccol]
             self.lines.insert(self.crow + 1, ln[self.ccol:])
-            self.crow += 1; self.ccol = 0
+            self.crow += 1
+            self.ccol = 0
             self.modified = True
 
-        elif key == curses.KEY_LEFT:  self.ccol = max(0, self.ccol - 1)
-        elif key == curses.KEY_RIGHT: self.ccol = min(len(self.lines[self.crow]), self.ccol + 1)
-        elif key == curses.KEY_UP:    self.crow = max(0, self.crow - 1);  self.clamp()
-        elif key == curses.KEY_DOWN:  self.crow = min(len(self.lines) - 1, self.crow + 1); self.clamp()
-        elif key == curses.KEY_HOME:  self.ccol = 0
-        elif key == curses.KEY_END:   self.ccol = len(self.lines[self.crow])
+        elif key == curses.KEY_LEFT:
+            self.ccol = max(0, self.ccol - 1)
+        elif key == curses.KEY_RIGHT:
+            self.ccol = min(len(self.lines[self.crow]), self.ccol + 1)
+        elif key == curses.KEY_UP:
+            self.crow = max(0, self.crow - 1)
+            self.clamp()
+        elif key == curses.KEY_DOWN:
+            self.crow = min(len(self.lines) - 1, self.crow + 1)
+            self.clamp()
+        elif key == curses.KEY_HOME:
+            self.ccol = 0
+        elif key == curses.KEY_END:
+            self.ccol = len(self.lines[self.crow])
 
         elif 32 <= key < 256:
             ch = chr(key)
@@ -477,16 +479,21 @@ class Editor:
 
     def handle_command(self, key: int) -> None:
         if key == 27:  # ESC
-            self.mode = self.NORMAL; self.cmd_buf = ""; return
+            self.mode = self.NORMAL
+            self.cmd_buf = ""
+            return
 
         if key in (curses.KEY_BACKSPACE, 127, 8):
-            if self.cmd_buf: self.cmd_buf = self.cmd_buf[:-1]
-            else: self.mode = self.NORMAL
+            if self.cmd_buf:
+                self.cmd_buf = self.cmd_buf[:-1]
+            else:
+                self.mode = self.NORMAL
             return
 
         if key in (curses.KEY_ENTER, 10, 13):
             self.exec_cmd(self.cmd_buf.strip())
-            if self.mode == self.COMMAND: self.mode = self.NORMAL
+            if self.mode == self.COMMAND:
+                self.mode = self.NORMAL
             self.cmd_buf = ""
             return
 
@@ -498,20 +505,22 @@ class Editor:
             self.save()
         elif cmd == "q":
             if self.modified:
-                self.flash("Unsaved changes! :q! to force quit, :wq to save & quit")
+                self.flash(
+                    "Unsaved changes! :q! to force quit, :wq to save & quit")
             else:
                 self.running = False
         elif cmd == "q!":
             self.running = False
         elif cmd in ("wq", "x"):
-            if self.save(): self.running = False
+            if self.save():
+                self.running = False
         elif cmd.startswith("w "):
-            new_name     = cmd[2:].strip()
-            par          = self.pw_path.rsplit("/", 1)
-            par_key      = par[0] if len(par) > 1 else "~"
-            self.pw_path  = f"{par_key}/{new_name}"
+            new_name = cmd[2:].strip()
+            par = self.pw_path.rsplit("/", 1)
+            par_key = par[0] if len(par) > 1 else "~"
+            self.pw_path = f"{par_key}/{new_name}"
             self.filename = new_name
-            self.is_pwe   = new_name.endswith(".pwe")
+            self.is_pwe = new_name.endswith(".pwe")
             self.save()
         else:
             self.flash(f"Not a tpwdit command: :{cmd}")
@@ -564,11 +573,7 @@ def main() -> None:
     except KeyboardInterrupt:
         pass
 
-<<<<<<< HEAD
-    print(f'tpwdit: bye from "{editor.filename}"'
-=======
     print(f'tpwdit: Done editing "{editor.filename}"'
->>>>>>> origin/testing
           + (" (unsaved changes discarded)" if editor.modified else ""))
 
 
