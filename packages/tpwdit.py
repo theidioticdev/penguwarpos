@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 tpwdit - TUI PenguWarp eDITor
 A vim-inspired terminal editor for PenguWarp OS v0.1.6 "Peach"
@@ -8,6 +9,8 @@ Modes:
   COMMAND - :w (save), :q (quit), :wq (save+quit), :q! (force quit)
 """
 
+=======
+>>>>>>> origin/testing
 import curses
 import json
 import os
@@ -33,7 +36,11 @@ SYSTEM_FILE = os.path.join(os.path.dirname(SCRIPT_DIR), "penguwarp_system.json")
 PWE_COMMANDS = {
     "help", "list", "read", "cd", "whereami", "mkdir", "mkfile", "delete",
     "rmdir", "echo", "run", "uname", "whoami", "pwdit", "tpwdit", "pyufetch",
+<<<<<<< HEAD
     "clear", "startx", "poweroff", "about", "pkgmgr",
+=======
+    "clear", "startx", "poweroff", "about", "pkgmgr","usercn","hostcn",
+>>>>>>> origin/testing
 }
 
 
@@ -62,12 +69,20 @@ def init_colors() -> None:
 
     # Gruvbox-approximate 256-color values
     BG     = 235   # #262626
+<<<<<<< HEAD
     FG     = 223   # close to ebdbb2
+=======
+    FG     = 223   # close to #ebdbb2
+>>>>>>> origin/testing
     YELLOW = 214   # #ffaf00
     GREEN  = 142   # #afaf00
     AQUA   = 108   # #87af87
     GRAY   = 102   # #878787
+<<<<<<< HEAD
     BG1    = 237   # #3a3a3a (cursor line bg)
+=======
+    BG1    = 237   # #3a3a3a 
+>>>>>>> origin/testing
     ORANGE = 208   # #ff8700
 
     curses.init_pair(PAIR_NORMAL_BAR,  BG,    YELLOW)
@@ -168,7 +183,10 @@ class Editor:
     COMMAND = "COMMAND"
 
     def __init__(self, pw_path: str) -> None:
+<<<<<<< HEAD
         # normalize bare filenames → ~/filename so they match the JSON keys PW uses
+=======
+>>>>>>> origin/testing
         if not pw_path.startswith("~") and "/" not in pw_path:
             pw_path = f"~/{pw_path}"
         self.pw_path  = pw_path
@@ -177,8 +195,13 @@ class Editor:
 
         self.mode       = self.NORMAL
         self.lines: list[str] = [""]
+<<<<<<< HEAD
         self.crow       = 0   # cursor row
         self.ccol       = 0   # cursor col
+=======
+        self.crow       = 0   
+        self.ccol       = 0   
+>>>>>>> origin/testing
         self.scroll_top = 0
         self.modified   = False
         self.cmd_buf    = ""
@@ -249,7 +272,11 @@ class Editor:
         scr.erase()
         h, w   = scr.getmaxyx()
         vis    = self.vis_rows(h)
+<<<<<<< HEAD
         lnum_w = len(str(len(self.lines))) + 2  # gutter width
+=======
+        lnum_w = len(str(len(self.lines))) + 2  
+>>>>>>> origin/testing
 
         # Text rows
         for sr in range(vis):
@@ -272,7 +299,10 @@ class Editor:
             highlight_line(scr, sr, lnum_w, self.lines[fr],
                            self.is_pwe, is_cur, w)
 
+<<<<<<< HEAD
         # Status bar
+=======
+>>>>>>> origin/testing
         bar_row = h - 2
         if self.mode == self.NORMAL:
             bar_pair, mode_tag = curses.color_pair(PAIR_NORMAL_BAR),  " NORMAL "
@@ -317,7 +347,10 @@ class Editor:
             except curses.error:
                 pass
 
+<<<<<<< HEAD
         # Cursor position
+=======
+>>>>>>> origin/testing
         if self.mode == self.COMMAND:
             try:
                 scr.move(msg_row, min(len(self.cmd_buf) + 1, w - 1))
@@ -531,7 +564,11 @@ def main() -> None:
     except KeyboardInterrupt:
         pass
 
+<<<<<<< HEAD
     print(f'tpwdit: bye from "{editor.filename}"'
+=======
+    print(f'tpwdit: Done editing "{editor.filename}"'
+>>>>>>> origin/testing
           + (" (unsaved changes discarded)" if editor.modified else ""))
 
 

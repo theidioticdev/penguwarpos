@@ -1,171 +1,203 @@
-import time
-import sys
 import os
-import json
-import tkinter as tk
-from collections.abc import Callable
-from colorama import Fore, init
-
 import readline
+import sys
+import time
 
-try:
-    import repo
-except ImportError:
-    repo = None
+from colorama import Fore, Style, init
+
+import system as S
+from commands import COMMANDS, execute_command
+from system import SYSTEM_FILE, load_system, save_system
 
 init(autoreset=True)
 
+# ── Boot visuals ──────────────────────────────────────────────────────────────
 
-def boot_animation_splash() -> None:
-    try:
-        from rich.console import Console
-        from rich.panel import Panel
+PENGUIN = [
+    "    ___    ",
+    "   (o o)   ",
+    "   ( V )   ",
+    "  /|___|\\  ",
+    " / |   | \\ ",
+    "   |___|   ",
+]
 
-        console = Console()
+PENGUIN_BLINK = [
+    "    ___    ",
+    "   (- -)   ",
+    "   ( V )   ",
+    "  /|___|\\  ",
+    " / |   | \\ ",
+    "   |___|   ",
+]
 
-        penguin = """
-           ___
-          <   o>
-          ( | )
-          /___\\
-        """
+BANNER = [
+    " ██████╗ ███████╗███╗   ██╗ ██████╗ ██╗   ██╗██╗    ██╗ █████╗ ██████╗ ██████╗ ",
+    " ██╔══██╗██╔════╝████╗  ██║██╔════╝ ██║   ██║██║    ██║██╔══██╗██╔══██╗██╔══██╗",
+    " ██████╔╝█████╗  ██╔██╗ ██║██║  ███╗██║   ██║██║ █╗ ██║███████║██████╔╝██████╔╝",
+    " ██╔═══╝ ██╔══╝  ██║╚██╗██║██║   ██║██║   ██║██║███╗██║██╔══██║██╔══██╗██╔═══╝ ",
+    " ██║     ███████╗██║ ╚████║╚██████╔╝╚██████╔╝╚███╔███╔╝██║  ██║██║  ██║██║     ",
+    " ╚═╝     ╚══════╝╚═╝  ╚═══╝ ╚═════╝  ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ",
+]
 
-        for i in range(6):
-            console.clear()
-            console.print(
-                Panel(
-                    f"[yellow]{penguin}[/yellow]\n"
-                    f'[bold orange1]PenguWarp OS v0.1.6 "Peach"[/bold orange1]\n'
-                    f"[dim]Initializing{'.' * (i + 1)}[/dim]",
-                    border_style="yellow",
-                    title="[bold]PENGUWARP[/bold]",
-                )
-            )
-            time.sleep(0.5)
-
-        console.clear()
-    except ImportError:
-        pass
-
-
-start_time = time.time()
-
-user = "liveuser"
-hostname = "livesys"
-current_dir = "~"
-filesystem: dict = {}
-installed_packages: list = []
-
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-SYSTEM_FILE = os.path.join(SCRIPT_DIR, "penguwarp_system.json")
-
-GRV_BG = "#282828"
-GRV_BG1 = "#3c3836"
-GRV_FG = "#ebdbb2"
-GRV_YELLOW = "#fabd2f"
-GRV_YELLOW_DIM = "#d79921"
-GRV_ORANGE = "#fe8019"
-GRV_ORANGE_DIM = "#d65d0e"
-GRV_RED = "#fb4934"
-GRV_GREEN = "#b8bb26"
-GRV_AQUA = "#8ec07c"
-GRV_GRAY = "#928374"
-GRV_BG_HARD = "#1d2021"
-WINDOW_CHROME = "#504945"
-TITLE_BAR = "#3c3836"
-DOCK_BG = "#1d2021"
-
-COMMAND_DESC = {
-    "help": "Display this comprehensive command reference",
-    "list": "List files and directories in the current path",
-    "read": "Read and display the contents of a file",
-    "cd": "Navigate between directories",
-    "whereami": "Show the current working directory path",
-    "mkdir": "Create a new directory",
-    "mkfile": "Create a new empty file",
-    "delete": "Remove a file",
-    "echo": "Display a line of text",
-    "run": "Execute a .pwe script file",
-    "uname": "Display kernel and system version",
-    "whoami": "Show current active user identity",
-    "pwdit": "Open the PenguWarp line editor for files",
-    "pyufetch": "Show system hardware and OS branding",
-    "clear": "Wipe the terminal screen",
-    "startx": "Launch the PenguWin GUI environment",
-    "pkgmgr": "Manage packages (install/remove/list/search)",
-    "poweroff": "Shutdown the system and save all changes",
-    "rmdir": "Remove an empty directory"
-}
+BOOT_MSGS = [
+    ("Detecting hardware...", True),
+    ("Mounting /dev/sda...", True),
+    ("Initializing Memory Manager...", True),
+    ("Starting filesystem...", True),
+    ("Loading PWShell...", True),
+    ("Spawning user environment...", True),
+]
 
 
-def load_system() -> bool:
-    global user, hostname, filesystem, installed_packages
-    if os.path.exists(SYSTEM_FILE):
-        try:
-            with open(SYSTEM_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                user = data["system"]["username"]
-                hostname = data["system"]["hostname"]
-                filesystem = data["filesystem"]
-                installed_packages = data.get("installed_packages", [])
-                return data["system"]["first_boot"]
-        except (json.JSONDecodeError, KeyError, OSError):
-            return True
-    return True
+def _clear():
+    sys.stdout.write("\033[2J\033[H")
+    sys.stdout.flush()
 
 
-def save_system() -> None:
-    data = {
-        "system": {"username": user, "hostname": hostname, "first_boot": False},
-        "filesystem": filesystem,
-        "installed_packages": installed_packages,
-    }
-    with open(SYSTEM_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+def _color_banner():
+    colors = [
+        Fore.YELLOW,
+        Fore.YELLOW,
+        Fore.WHITE,
+        Fore.WHITE,
+        Fore.YELLOW,
+        Fore.YELLOW,
+    ]
+    for i, line in enumerate(BANNER):
+        print(colors[i % len(colors)] + line)
 
 
-def first_boot_setup() -> None:
-    global user, hostname, filesystem
-    os.system("cls" if os.name == "nt" else "clear")
-    print(f"{Fore.YELLOW}╔════════════════════════════════════════╗")
-    print(f'{Fore.YELLOW}║  ~ Welcome to PenguWarp OS "Peach"!  ~ ║')
-    print(f"{Fore.YELLOW}╚════════════════════════════════════════╝\n")
-    u_in = input(f"{Fore.YELLOW}Choose Username: {Fore.WHITE}").strip()
-    h_in = input(f"{Fore.YELLOW}Choose Hostname: {Fore.WHITE}").strip()
-    user = u_in if u_in else "user"
-    hostname = h_in if h_in else "pengu"
-    filesystem.update(
+def _draw_frame(penguin_art, status_line="", progress=0, show_status=False):
+    _clear()
+    print()
+    _color_banner()
+    print()
+    for line in penguin_art:
+        print(f"         {Fore.YELLOW}{line}")
+    print()
+    print(
+        f'         {Fore.WHITE}PenguWarp OS  {Fore.YELLOW}v0.1.8 "Lemon"{Fore.WHITE}  [Testing]'
+    )
+    print()
+    if show_status and status_line:
+        ok = f"{Fore.GREEN}  OK  {Fore.WHITE}"
+        print(f"  [{ok}] {Fore.WHITE}{status_line}")
+    elif status_line:
+        print(f"  {Style.DIM}{status_line}")
+    if progress > 0:
+        bar_len = 40
+        filled = int(bar_len * progress / 100)
+        bar = f"{Fore.YELLOW}{'█' * filled}{Fore.WHITE}{'░' * (bar_len - filled)}"
+        print(f"\n  [{bar}{Fore.WHITE}] {Fore.YELLOW}{progress}%")
+
+
+def _boot_splash() -> None:
+    # phase 1: penguin blinks while banner loads
+    for i in range(3):
+        _draw_frame(
+            PENGUIN if i % 2 == 0 else PENGUIN_BLINK, "Waking up...", progress=0
+        )
+        time.sleep(0.35)
+    # phase 2: boot messages with progress bar
+    total = len(BOOT_MSGS)
+    for idx, (msg, _) in enumerate(BOOT_MSGS):
+        progress = int(((idx + 1) / total) * 100)
+        _draw_frame(PENGUIN, msg, progress=progress, show_status=True)
+        time.sleep(0.22)
+    # phase 3: boot complete flash
+    for _ in range(2):
+        _draw_frame(
+            PENGUIN, f"{Fore.GREEN}Boot complete!", progress=100, show_status=False
+        )
+        time.sleep(0.18)
+        _draw_frame(
+            PENGUIN_BLINK,
+            f"{Fore.GREEN}Boot complete!",
+            progress=100,
+            show_status=False,
+        )
+        time.sleep(0.18)
+    _draw_frame(PENGUIN, f"{Fore.GREEN}Boot complete!", progress=100, show_status=False)
+    time.sleep(0.4)
+    _clear()
+
+
+# ── First boot setup ──────────────────────────────────────────────────────────
+
+
+def _first_boot_setup() -> None:
+    from setup import run_setup
+    from system import hash_pw
+
+    data = run_setup()
+
+    hostname = data["hostname"]
+    username = data["username"]
+    password = data["password"]
+
+    S.hostname = hostname
+
+    # ── root: auto-created, home is ~, is_admin ───────────────────────────────
+    root_pw = hash_pw(str(__import__("uuid").uuid4()))  # random unguessable pw
+    S.users_list.append(
         {
-            "~": {
-                "type": "dir",
-                "contents": [
-                    "Documents",
-                    "Downloads",
-                    "Pictures",
-                    "Desktop",
-                    "welcome.txt",
-                ],
+            "username": "root",
+            "password": root_pw,
+            "is_admin": True,
+            "home": "~",
+        }
+    )
+
+    # ── regular user: home is ~/usr/<username> ────────────────────────────────
+    S.users_list.append(
+        {
+            "username": username,
+            "password": hash_pw(password),
+            "is_admin": True,
+            "home": f"~/usr/{username}",
+        }
+    )
+
+    user_home = f"~/usr/{username}"
+
+    # ── filesystem layout ─────────────────────────────────────────────────────
+    S.filesystem.update(
+        {
+            # root dirs
+            "~": {"type": "dir", "contents": ["sys", "usr", "pkgs", "tmp"]},
+            "~/sys": {"type": "dir", "contents": ["version"]},
+            "~/usr": {"type": "dir", "contents": [username]},
+            "~/pkgs": {"type": "dir", "contents": []},
+            "~/tmp": {"type": "dir", "contents": []},
+            # system files
+            "~/sys/version": {
+                "type": "file",
+                "content": 'PenguWarp OS v0.1.8 "Lemon" Testing\nKernel: v0.1.8-lemon-dev_x86_64',
             },
-            "~/Documents": {"type": "dir", "contents": []},
-            "~/Downloads": {"type": "dir", "contents": []},
-            "~/Pictures": {"type": "dir", "contents": []},
-            "~/Desktop": {"type": "dir", "contents": []},
-            "~/welcome.txt": {
+            # user home
+            user_home: {"type": "dir", "contents": ["welcome.txt"]},
+            f"{user_home}/welcome.txt": {
                 "type": "file",
                 "content": (
-                    f'Welcome to PenguWarp OS "Peach", {user}!\n\n'
-                    "Explore around, and do not forget to run 'pkgmgr search' daily to find new packages!.\n"
-                    "Type 'help' to begin.\n\n"
-                    "Built with Python & Tkinter."
+                    f'Welcome to PenguWarp OS "Lemon", {username}!\n\n'
+                    f"Your home directory is {user_home}.\n"
+                    "Type 'help' to see available commands.\n"
+                    "Use 'pwpm search' to browse installable packages.\n\n"
+                    "Built with Python & Dear PyGui."
                 ),
             },
         }
     )
+
+    # boot as the new regular user, starting in their home dir
+    S.user = username
+    S.current_dir = user_home
+
     save_system()
-    print(f"\n{Fore.YELLOW}System initialized. Booting...")
-    time.sleep(1)
 
 
+<<<<<<< HEAD
 def boot_sequence() -> None:
     print(f"{Fore.YELLOW}PenguWarp Kernel v0.1.6-peach_x86_64 initializing...")
     time.sleep(0.4)
@@ -1321,15 +1353,31 @@ commands: dict[str, object] = {
 def setup_readline() -> None:
     """Configure readline with tab completion for commands and filesystem paths."""
 
+=======
+# ── Tab completion ────────────────────────────────────────────────────────────
+
+
+def _setup_readline() -> None:
+>>>>>>> origin/testing
     def completer(text: str, state: int) -> str | None:
-        parts = readline.get_line_buffer().split()
-        if len(parts) == 0 or (
-            len(parts) == 1 and not readline.get_line_buffer().endswith(" ")
-        ):
-            all_cmds = list(commands.keys()) + installed_packages
+        buf = readline.get_line_buffer()
+        parts = buf.split()
+        # ── command completion ─────────────────────────────────────────
+        if not parts or (len(parts) == 1 and not buf.endswith(" ")):
+            all_cmds = list(COMMANDS.keys()) + S.installed_packages
             matches = [c for c in all_cmds if c.startswith(text)]
             return matches[state] if state < len(matches) else None
+        # ── path completion ────────────────────────────────────────────
+        if "/" in text:
+            slash = text.rfind("/")
+            dir_raw = text[:slash] or "~"
+            prefix = text[slash + 1 :]
+            base_dir = S.resolve_path(dir_raw)
+        else:
+            base_dir = S.current_dir
+            prefix = text
 
+<<<<<<< HEAD
         prefix = text
         base_dir = current_dir
 
@@ -1341,10 +1389,16 @@ def setup_readline() -> None:
         contents = filesystem.get(base_dir, {}).get("contents", [])
         matches = [item for item in contents if item.startswith(prefix)]
 
+=======
+        contents = S.filesystem.get(base_dir, {}).get("contents", [])
+        matches = [i for i in contents if i.startswith(prefix)]
+>>>>>>> origin/testing
         if state < len(matches):
             item = matches[state]
-            full = f"{base_dir}/{item}" if base_dir != "~" else f"~/{item}"
-            return item + ("/" if filesystem.get(full, {}).get("type") == "dir" else "")
+            full_path = f"{base_dir}/{item}" if base_dir != "~" else f"~/{item}"
+            suffix = "/" if S.filesystem.get(full_path, {}).get("type") == "dir" else ""
+            dir_prefix = text[: text.rfind("/") + 1] if "/" in text else ""
+            return dir_prefix + item + suffix
         return None
 
     readline.set_completer(completer)
@@ -1354,6 +1408,7 @@ def setup_readline() -> None:
     readline.parse_and_bind('"\\e[B": next-history')
 
 
+<<<<<<< HEAD
 def execute_command(line: str) -> None:
     parts = line.split()
     if not parts:
@@ -1382,24 +1437,63 @@ def execute_command(line: str) -> None:
             load_system()
     else:
         print(f"penguwarp: {cmd}: command not found")
+=======
+# ── Shell loop ────────────────────────────────────────────────────────────────
+>>>>>>> origin/testing
 
 
-if __name__ == "__main__":
-    if load_system():
-        first_boot_setup()
-    else:
-        boot_animation_splash()
-
-    boot_sequence()
-    setup_readline()
+def _shell_loop() -> None:
+    _setup_readline()
     while True:
         try:
+<<<<<<< HEAD
             line = input(
                 f"{Fore.YELLOW}{
                     user}@{hostname}{Fore.WHITE}:{Fore.YELLOW}{current_dir}{Fore.WHITE}$ "
             ).strip()
+=======
+            prompt = (
+                f"{Fore.YELLOW}{S.user} of {S.hostname}: "
+                f"{Fore.WHITE}:{Fore.YELLOW}{S.current_dir}{Fore.WHITE}$ "
+            )
+            line = input(prompt).strip()
+>>>>>>> origin/testing
             execute_command(line)
         except KeyboardInterrupt:
             print("\nType 'poweroff' to exit.")
         except EOFError:
-            cmd_poweroff([])
+            execute_command("poweroff")
+
+
+# ── Entry point ───────────────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    is_first_boot = load_system()
+    if is_first_boot:
+        _first_boot_setup()
+    else:
+        _boot_splash()
+
+    # ── Boot to GUI login manager if penguwin is installed ────────────────────
+    if "penguwin" in S.installed_packages:
+        from packages import loginmgr
+
+        login_ok = loginmgr.start_login()
+        if login_ok:
+            from packages.gui import start_gui
+
+            print(f"{Fore.YELLOW}Loading PenguWin Desktop Environment...")
+            for i in range(11):
+                import sys as _sys
+
+                _sys.stdout.write(f"\r[{'#' * i}{'.' * (10 - i)}] {i * 10}%")
+                _sys.stdout.flush()
+                import time as _t
+
+                _t.sleep(0.06)
+            print("\n")
+            start_gui()
+            print(f"{Fore.YELLOW}Desktop closed. Back in PWShell.{Fore.WHITE}")
+        # login cancelled / window closed → fall through to shell
+
+    _shell_loop()
